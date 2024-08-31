@@ -1,0 +1,426 @@
+andleDateSelectimport React, { useState } from "react";
+import PersianDatePicker from "./PersianDatePicker";
+import "bootstrap/dist/css/bootstrap.min.css";
+import AccessLevelModal from "./AccessLevelModal"; // Import the AccessLevelModal component
+import DatePickerModal from "./DatePickerModal"; // Import the DatePickerModal component
+
+const InvitationModal = ({ show, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    endDate: "",
+    position: [],
+    gender: "",
+    file: null,
+    issuer: "",
+    letterNumber: "",
+    letterDate: "",
+    confirmer: "",
+  });
+
+  const [showFileInput, setShowFileInput] = useState(false);
+  const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
+  const [listSize, setListSize] = useState(4);
+  const [showDatePickerModal, setShowDatePickerModal] = useState(false);
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const handleChange = (e) => {
+    const { name, value, type, selectedOptions, files } = e.target;
+    if (type === "select-multiple") {
+      const options = Array.from(selectedOptions).map((option) => option.value);
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: options,
+      }));
+
+      const specialOptions = [
+        "نماینده آب منطقه‌ای",
+        "نماینده آببران ذهاب جنوبی",
+        "نماینده آببران حومه قراویز",
+        "نماینده آببران بشیوه",
+        "نماینده آببران قلعه شاهین",
+        "نماینده آببران جگرلوی جنوبی",
+        "متقاضی مجوزدار",
+      ];
+      const hasSpecialOption = options.some((option) =>
+        specialOptions.includes(option)
+      );
+      setShowFileInput(hasSpecialOption);
+      setShowAdditionalInputs(hasSpecialOption);
+    } else if (type === "file") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSizeChange = (e) => {
+    setListSize(Number(e.target.value));
+  };
+
+  const isFormValid = () => {
+    const {
+      lastName,
+      phoneNumber,
+      gender,
+      position,
+      file,
+      issuer,
+      letterNumber,
+      letterDate,
+      confirmer,
+    } = formData;
+
+    const basicValid = lastName && phoneNumber && gender && position.length > 0;
+
+    const specialOptionsSelected = [
+      "نماینده آب منطقه‌ای",
+      "نماینده آببران ذهاب جنوبی",
+      "نماینده آببران حومه قراویز",
+      "نماینده آببران بشیوه",
+      "نماینده آببران قلعه شاهین",
+      "نماینده آببران جگرلوی جنوبی",
+      "متقاضی مجوزدار",
+    ].some((option) => position.includes(option));
+
+    if (specialOptionsSelected) {
+      return (
+        basicValid && file && issuer && letterNumber && letterDate && confirmer
+      );
+    }
+
+    return basicValid;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      onSubmit(formData);
+    }
+  };
+
+  const modalClass = showAdditionalInputs ? "modal-lg" : "modal-md";
+  const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
+
+  const toggleAccessLevelModal = () => {
+    setShowAccessLevelModal((prevState) => !prevState);
+  };
+
+  const toggleDatePickerModal = () => {
+    setShowDatePickerModal((prevState) => !prevState);
+  };
+
+  const handleDateSelect = (date) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      letterDate: date,
+    }));
+  };
+
+  return (
+    <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
+      <div className={`modal-dialog ${modalClass}`}>
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">ارسال دعوتنامه</h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+            ></button>
+          </div>
+          <div className="modal-body">
+            <div className="container-fluid">
+              <div className="row">
+                {showAdditionalInputs && (
+                  <div
+                    className="col-6 position-absolute"
+                    style={{
+                      top: 0,
+                      left: 0,
+                      borderRight: "1px solid #ccc",
+                      backgroundColor: "white",
+                      height: "100%",
+                      zIndex: 1,
+                    }}
+                  >
+                    <form>
+                      <div className="mb-3 text-end">
+                        <label htmlFor="file" className="form-label">
+                          آپلود معرفی‌نامه
+                        </label>
+                        <input
+                          type="file"
+                          className="form-control"
+                          id="file"
+                          name="file"
+                          accept=".jpg,.jpeg,.png,.pdf"
+                          onChange={handleChange}
+                          required={showFileInput}
+                        />
+                      </div>
+
+                      <div className="mb-3 text-end">
+                        <label htmlFor="issuer" className="form-label">
+                          صادرکننده معرفی‌نامه
+                        </label>
+                        <input
+                          list="issuerOptions"
+                          type="text"
+                          className="form-control text-end"
+                          id="issuer"
+                          name="issuer"
+                          value={formData.issuer}
+                          onChange={handleChange}
+                          required
+                        />
+                        <datalist id="issuerOptions">
+                          <option value="شرکت آب منطقه‌ای کرمانشاه" />
+                          <option value="سازمان جهاد کشاورزی استان کرمانشاه" />
+                        </datalist>
+                      </div>
+
+                      <div className="mb-3 text-end">
+                        <label htmlFor="letterNumber" className="form-label">
+                          شماره معرفی‌نامه
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="letterNumber"
+                          name="letterNumber"
+                          value={formData.letterNumber}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 text-end">
+                        <button
+                          type="button"
+                          className="btn btn-info"
+                          onClick={toggleDatePickerModal}
+                        >
+                          تاریخ معرفی‌نامه{" "}
+                        </button>
+                      </div>
+                      <div className="mb-3 text-end">
+                        <label htmlFor="confirmer" className="form-label">
+                          تاییدکننده
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="confirmer"
+                          name="confirmer"
+                          value={formData.confirmer}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    </form>
+                  </div>
+                )}
+                <div
+                  className={`col-6 ${
+                    showAdditionalInputs ? "offset-6" : ""
+                  }`}
+                >
+                  <form>
+                    <div className="mb-3 text-end">
+                      <label htmlFor="firstName" className="form-label">
+                        نام
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control text-end"
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3 text-end">
+                      <label htmlFor="lastName" className="form-label">
+                        نام خانوادگی
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control text-end"
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3 text-end">
+                      <label htmlFor="phoneNumber" className="form-label">
+                        شماره تلفن همراه
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control text-end"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3 text-end">
+                      <label htmlFor="gender" className="form-label">
+                        جنسیت
+                      </label>
+                      <select
+                        id="gender"
+                        name="gender"
+                        className="form-select text-end"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">انتخاب کنید</option>
+                        <option value="مرد">مرد</option>
+                        <option value="زن">زن</option>
+                      </select>
+                    </div>
+
+                    <div className="mb-3 text-end">
+                      <label htmlFor="position" className="form-label">
+                        سمت
+                      </label>
+                      <select
+                        id="position"
+                        name="position"
+                        className="form-select text-end"
+                        multiple
+                        value={formData.position}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="نماینده آب منطقه‌ای">نماینده آب منطقه‌ای</option>
+                        <option value="نماینده آببران ذهاب جنوبی">نماینده آببران ذهاب جنوبی</option>
+                        <option value="نماینده آببران حومه قراویز">نماینده آببران حومه قراویز</option>
+                        <option value="نماینده آببران بشیوه">نماینده آببران بشیوه</option>
+                        <option value="نماینده آببران قلعه شاهین">نماینده آببران قلعه شاهین</option>
+                        <option value="نماینده آببران جگرلوی جنوبی">نماینده آببران جگرلوی جنوبی</option>
+                        <option value="متقاضی مجوزدار">متقاضی مجوزدار</option>
+                      </select>
+                    </div>
+
+                    {showFileInput && (
+                      <div className="mb-3 text-end">
+                        <label htmlFor="file" className="form-label">
+                          آپلود فایل
+                        </label>
+                        <input
+                          type="file"
+                          className="form-control text-end"
+                          id="file"
+                          name="file"
+                          accept=".jpg,.jpeg,.png,.pdf"
+                          onChange={handleChange}
+                        />
+                      </div>
+                    )}
+
+                    {showAdditionalInputs && (
+                      <div className="mb-3 text-end">
+                        <label htmlFor="issuer" className="form-label">
+                          صادرکننده
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="issuer"
+                          name="issuer"
+                          value={formData.issuer}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {showAdditionalInputs && (
+                      <div className="mb-3 text-end">
+                        <label htmlFor="letterNumber" className="form-label">
+                          شماره معرفی‌نامه
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="letterNumber"
+                          name="letterNumber"
+                          value={formData.letterNumber}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {showAdditionalInputs && (
+                      <div className="mb-3 text-end">
+                        <button
+                          type="button"
+                          className="btn btn-info"
+                          onClick={toggleDatePickerModal}
+                        >
+                          تاریخ معرفی‌نامه{" "}
+                        </button>
+                      </div>
+                    )}
+
+                    {showAdditionalInputs && (
+                      <div className="mb-3 text-end">
+                        <label htmlFor="confirmer" className="form-label">
+                          تاییدکننده
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="confirmer"
+                          name="confirmer"
+                          value={formData.confirmer}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
+              بستن
+            </button>
+            <button type="button" className="btn btn-primary" onClick={handleSubmit} disabled={!isFormValid()}>
+              ارسال
+            </button>
+          </div>
+        </div>
+      </div>
+      <DatePickerModal
+        show={showDatePickerModal}
+        onClose={toggleDatePickerModal}
+        onDateSelect={handleDateSelect}
+      />
+      {showAccessLevelModal && <AccessLevelModal />}
+    </div>
+  );
+};
+
+export default InvitationModal;

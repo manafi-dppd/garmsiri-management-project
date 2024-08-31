@@ -1,0 +1,28 @@
+.checkbox-square:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+  }
+  
+  .checkbox-square {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .checkbox-square:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #007bff;
+    background-color: white;
+  }
+  
+  .checkbox-square:checked:before {
+    content: "\u2714"; /* علامت ✔ */
+    text-align: center;
+    line-height: 16px;
+  }
+  
