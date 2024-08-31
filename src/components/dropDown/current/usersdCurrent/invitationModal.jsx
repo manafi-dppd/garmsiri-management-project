@@ -130,11 +130,12 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       <div className={`modal-dialog ${modalClass}`}>
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">ارسال دعوتنامه</h5>
+            <h5 className="modal-title">دعوتنامه</h5>
             <button
               type="button"
-              className="btn-close"
+              className="btn-close ms-auto"
               onClick={onClose}
+              style={{ position: "absolute", left: "10px" }} // تنظیم مکان دقیق دکمه
             ></button>
           </div>
           <div className="modal-body">
@@ -295,7 +296,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                       />
                     </div>
 
-                    <div className="mb-3 d-flex flex-row-reverse">
+                    <div className="mb-3 d-flex flex-row">
                       <label className="form-label">جنسیت:</label>
                       <div>
                         <div className="form-check form-check-inline">
@@ -332,26 +333,6 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                     </div>
 
                     <div className="d-flex align-baseline mb-3">
-                      <div className="me-3">
-                        <label
-                          htmlFor="listSize"
-                          className="form-label"
-                          style={{ fontSize: "0.8rem" }}
-                        >
-                          آیتم‌های قابل مشاهده
-                        </label>
-                        <input
-                          type="number"
-                          className="form-control text-end"
-                          id="listSize"
-                          name="listSize"
-                          value={listSize}
-                          onChange={handleSizeChange}
-                          min="1"
-                          max="20"
-                          required
-                        />
-                      </div>
                       <div className="flex-grow-1">
                         <label htmlFor="position" className="form-label">
                           سمت
@@ -376,7 +357,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                           <option value="مدیران مرتبط وزارت نیرو">
                             مدیران مرتبط وزارت نیرو
                           </option>
-                          <option value="مدیران مرتبط وزارت نیرو">
+                          <option value="ناظر برق و پمپاژ">
                             ناظر برق و پمپاژ
                           </option>
                           <option value="نماینده اجرا">نماینده اجرا</option>
@@ -421,7 +402,21 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                           <option value="متقاضی مجوزدار">متقاضی مجوزدار</option>
                         </select>
                       </div>
+                      <div className="me-3">
+                      <input
+                        type="number"
+                        className="form-control text-end"
+                        id="listSize"
+                        name="listSize"
+                        value={listSize}
+                        onChange={handleSizeChange}
+                        min="1"
+                        max="20"
+                        required
+                      />
                     </div>
+                    </div>
+                    
                     <div className="mb-3">
                       <button
                         type="button"

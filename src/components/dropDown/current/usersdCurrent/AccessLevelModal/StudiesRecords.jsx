@@ -39,10 +39,8 @@ const StudiesRecords = ({ checkedState, setCheckedState }) => {
 
   return (
     <div className="p-3">
-      <div className="form-check d-flex justify-content-end align-items-center">
-        <label className="form-check-label me-2" htmlFor="studiesRecords">
-          سوابق مطالعات
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center">
+        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -50,6 +48,9 @@ const StudiesRecords = ({ checkedState, setCheckedState }) => {
           checked={checkedState.studiesRecords}
           onChange={handleParentCheck}
         />
+        <label className="form-check-label me-2" htmlFor="studiesRecords">
+          سوابق مطالعات
+        </label>
       </div>
 
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "سوابق مطالعات" */}

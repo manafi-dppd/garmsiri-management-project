@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import "../CheckBox.css"
+import "../CheckBox.css";
 
-const ReportCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }) => {
-  const childCheckboxes = [
-      "periodic",
-      "case",
-      "pumpingMoment",
-      "dailyPumping",
-    ];
+const ReportCheckboxGroup = ({
+  checkedState,
+  setCheckedState,
+  checkParentStatus,
+}) => {
+  const childCheckboxes = ["periodic", "case", "pumpingMoment", "dailyPumping"];
 
   const handleParentCheck = () => {
     const newState = !checkedState.report;
@@ -46,10 +45,7 @@ const ReportCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus 
 
   return (
     <>
-      <div className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-        <label className="form-check-label me-2" htmlFor="report" style={{ textDecoration: "underline" }}>
-          گزارش
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -57,21 +53,32 @@ const ReportCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus 
           checked={checkedState.report}
           onChange={handleParentCheck}
         />
+        <label
+          className="form-check-label me-2"
+          htmlFor="report"
+          style={{ textDecoration: "underline" }}
+        >
+          گزارش
+        </label>
       </div>
 
       {/* زیرمجموعه‌ها */}
       {checkedState.report && (
-        <div className="ms-4 mx-4 custom-checkbox" style={{ fontSize: "0.8rem" }}>
+        <div
+          className="ms-4 mx-4 custom-checkbox"
+          style={{ fontSize: "0.8rem" }}
+        >
           {[
             { key: "periodic", label: "دوره‌ای" },
             { key: "case", label: "موردی" },
             { key: "pumpingMoment", label: "لحظه‌ای پمپاژ" },
             { key: "dailyPumping", label: "روزانه پمپاژ" },
           ].map((item) => (
-            <div key={item.key} className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-              <label className="form-check-label me-2" htmlFor={item.key}>
-                {item.label}
-              </label>
+            <div
+              key={item.key}
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
+            >
+              
               <input
                 className="form-check-input mx-2"
                 type="checkbox"
@@ -79,6 +86,9 @@ const ReportCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus 
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
+              <label className="form-check-label me-2" htmlFor={item.key}>
+                {item.label}
+              </label>
             </div>
           ))}
         </div>

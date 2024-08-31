@@ -46,10 +46,8 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
 
   return (
     <>
-      <div className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-        <label className="form-check-label me-2" htmlFor="legal" style={{ textDecoration: "underline" }}>
-          امور حقوقی
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -57,6 +55,9 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
           checked={checkedState.legal}
           onChange={handleParentCheck}
         />
+        <label className="form-check-label me-2" htmlFor="legal" style={{ textDecoration: "underline" }}>
+          امور حقوقی
+        </label>
       </div>
 
       {/* زیرمجموعه‌ها */}
@@ -68,10 +69,8 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
             { key: "bill", label: "دادخواست/دفاعیه/رای" },
             { key: "damages", label: "خسارت و جریمه" },
           ].map((item) => (
-            <div key={item.key} className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-              <label className="form-check-label me-2" htmlFor={item.key}>
-                {item.label}
-              </label>
+            <div key={item.key} className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+              
               <input
                 className="form-check-input mx-2"
                 type="checkbox"
@@ -79,6 +78,9 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
+              <label className="form-check-label me-2" htmlFor={item.key}>
+                {item.label}
+              </label>
             </div>
           ))}
         </div>

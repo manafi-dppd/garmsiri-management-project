@@ -49,7 +49,6 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
       securityOps: newState,
     }));
   };
-  
 
   const checkParentStatus = () => {
     setCheckedState((prevState) => ({
@@ -74,7 +73,6 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
         ...prevState,
         [childKey]: !prevState[childKey],
       };
-      
 
       // بررسی اینکه اگر همه چک‌ باکس‌های زیرمجموعه غیر فعال شدند، چک‌ باکس پدر نیز غیر فعال شود
       const allUnchecked = [
@@ -85,22 +83,19 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
       ].every((key) => !newCheckedState[key]);
 
       newCheckedState.operationalRecords = !allUnchecked;
-      
+
       return newCheckedState;
-      
     });
 
     // بررسی وضعیت پدر بعد از به‌روزرسانی
-    
-    checkParentStatus();    
+
+    checkParentStatus();
   };
 
   return (
     <div className="p-3">
-      <div className="form-check d-flex justify-content-end align-items-center">
-        <label className="form-check-label me-2" htmlFor="operationalRecords">
-          سوابق بهره‌برداری
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center">
+        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -108,6 +103,9 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
           checked={checkedState.operationalRecords}
           onChange={handleParentCheck}
         />
+        <label className="form-check-label me-2" htmlFor="operationalRecords">
+          سوابق بهره‌برداری
+        </label>
       </div>
 
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "سوابق بهره‌برداری" */}
@@ -146,15 +144,8 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
             >
-              <label
-                className="form-check-label me-2"
-                htmlFor={item.key}
-                style={{ textDecoration: "underline" }}
-              >
-                {item.label}
-              </label>
               <input
                 className="form-check-input mx-2"
                 type="checkbox"
@@ -162,6 +153,13 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)} // استفاده از تابع جدید handleChildCheck
               />
+              <label
+                className="form-check-label me-2"
+                htmlFor={item.key}
+                style={{ textDecoration: "underline" }}
+              >
+                {item.label}
+              </label>
             </div>
           ))}
         </>

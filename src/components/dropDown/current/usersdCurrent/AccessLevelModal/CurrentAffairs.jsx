@@ -117,10 +117,7 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
 
   return (
     <div className="p-3">
-      <div className="form-check d-flex justify-content-end align-items-center">
-        <label className="form-check-label me-2" htmlFor="currentAffairs">
-          امور جاری
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center">        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -128,6 +125,9 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
           checked={checkedState.currentAffairs}
           onChange={handleParentCheck}
         />
+        <label className="form-check-label me-2" htmlFor="currentAffairs">
+          امور جاری
+        </label>
       </div>
 
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "امور جاری" */}
@@ -195,15 +195,9 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
             >
-              <label
-                className="form-check-label me-2"
-                htmlFor={item.key}
-                style={{ textDecoration: "underline" }}
-              >
-                {item.label}
-              </label>
+              
               <input
                 className="form-check-input mx-2"
                 type="checkbox"
@@ -211,6 +205,13 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
+              <label
+                className="form-check-label me-2"
+                htmlFor={item.key}
+                style={{ textDecoration: "underline" }}
+              >
+                {item.label}
+              </label>
             </div>
           ))}
         </>

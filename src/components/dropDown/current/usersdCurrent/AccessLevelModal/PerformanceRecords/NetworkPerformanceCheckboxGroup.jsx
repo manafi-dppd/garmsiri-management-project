@@ -42,14 +42,8 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
 
   return (
     <>
-      <div className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-        <label
-          className="form-check-label me-2"
-          htmlFor="networkPerformance"
-          style={{ textDecoration: "underline" }}
-        >
-          شبکه
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -57,6 +51,13 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
           checked={checkedState.networkPerformance}
           onChange={handleParentCheck}
         />
+        <label
+          className="form-check-label me-2"
+          htmlFor="networkPerformance"
+          style={{ textDecoration: "underline" }}
+        >
+          شبکه
+        </label>
       </div>
 
       {/* زیرمجموعه‌ها */}
@@ -72,11 +73,9 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
             >
-              <label className="form-check-label me-2" htmlFor={item.key}>
-                {item.label}
-              </label>
+              
               <input
                 className="form-check-input mx-2"
                 type="checkbox"
@@ -84,6 +83,9 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
+              <label className="form-check-label me-2" htmlFor={item.key}>
+                {item.label}
+              </label>
             </div>
           ))}
         </div>

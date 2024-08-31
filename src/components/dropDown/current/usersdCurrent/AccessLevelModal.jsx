@@ -37,10 +37,15 @@ const AccessLevelModal = ({ show, onClose }) => {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">سطح دسترسی</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+              style={{ position: "absolute", left: "10px" }}
+            ></button>
           </div>
           <div className="modal-body text-end d-flex flex-wrap">
-            <div className="row w-100 flex-row-reverse">
+            <div className="row w-100">
               <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <CurrentAffairs
                   checkedState={checkedState}
@@ -68,7 +73,11 @@ const AccessLevelModal = ({ show, onClose }) => {
             </div>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+            >
               انصراف
             </button>
             <button type="button" className="btn btn-primary">

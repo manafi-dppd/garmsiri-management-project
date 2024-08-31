@@ -1,7 +1,7 @@
 import { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
-import Current from "../components/dropDown/current"
+import Current from "../components/dropDown/current";
 import Records from "../components/dropDown/records";
 import Construction from "../components/dropDown/construction";
 import Studies from "../components/dropDown/studies";
@@ -38,8 +38,6 @@ import NetworkConstruction from "../components/dropDown/construction/networkCons
 import FirstStudies from "../components/dropDown/studies/firstStudies";
 import SecondStudies from "../components/dropDown/studies/secondStudies";
 import ModalTest from "./modal";
-
-
 
 class Header extends Component {
   state = {
@@ -91,7 +89,7 @@ class Header extends Component {
       onContractCurrentClick: () => this.handleToggle("contractCurrent"),
       onRequestCurrentClick: () => this.handleToggle("requestCurrent"),
       onDeliveryCurrentClick: () => this.handleToggle("deliveryCurrent"),
-      onReportCurrentClick: () => this.handleToggle("reportCurrent"),      
+      onReportCurrentClick: () => this.handleToggle("reportCurrent"),
       onServiceCurrentClick: () => this.handleToggle("serviceCurrent"),
       onRepairCurrentClick: () => this.handleToggle("repairCurrent"),
       onProtectionCurrentClick: () => this.handleToggle("protectionCurrent"),
@@ -114,16 +112,19 @@ class Header extends Component {
       onReportsRecordsClick: () => this.handleToggle("reportsRecords"),
       onVisitesRecordsClick: () => this.handleToggle("visitesRecords"),
     };
-    const constructionHandlers ={
+    const constructionHandlers = {
       onDamConstructionClick: () => this.handleToggle("damConstruction"),
-      onChannelConstructionClick: () => this.handleToggle("channelConstruction"),
-      onPumpingConstructionClick: () => this.handleToggle("pumpingConstruction"),
-      onNetworkConstructionClick: () => this.handleToggle("networkConstruction"),
-    }
-    const StudiesHandlers ={
+      onChannelConstructionClick: () =>
+        this.handleToggle("channelConstruction"),
+      onPumpingConstructionClick: () =>
+        this.handleToggle("pumpingConstruction"),
+      onNetworkConstructionClick: () =>
+        this.handleToggle("networkConstruction"),
+    };
+    const StudiesHandlers = {
       onFirstStudiesClick: () => this.handleToggle("firstStudies"),
       onSecondStudiesClick: () => this.handleToggle("secondStudies"),
-    }
+    };
     const { activeComponent, userData } = this.state;
     const componentMap = {
       usersdCurrent: () => <UsersdCurrent userData={userData} />,
@@ -155,7 +156,7 @@ class Header extends Component {
       pumpingConstruction: PumpingConstruction,
       networkConstruction: NetworkConstruction,
       firstStudies: FirstStudies,
-      secondStudies: SecondStudies
+      secondStudies: SecondStudies,
     };
 
     const ActiveComponent = componentMap[this.state.activeComponent];
@@ -163,21 +164,6 @@ class Header extends Component {
     return (
       <>
         <div className="row Header pb-0" role="banner">
-          <div className="col col-xl-9 col-lg-8 col-md-7 mt-auto align-bottom">
-            <div className="row">
-              <div className="form-group position-fixed top-0 start-0 ml-5 mt-4 px-3">
-                <label
-                  htmlFor="registerInput"
-                  className="d-flex align-items-center text-white"
-                >
-                  <a href="" className="text-white" data-bs-toggle="modal" data-bs-target="#registerModal">
-                    <FontAwesomeIcon icon={faUser} className="me-2" />
-                    ورود/عضویت
-                  </a>
-                </label>
-              </div>
-            </div>
-          </div>
           <div className="col col-xl-3 col-lg-4 col-md-5 px-5">
             <a
               href="index.html"
@@ -194,8 +180,30 @@ class Header extends Component {
               </h1>
             </a>
           </div>
+          <div className="col col-xl-7 col-lg-5 col-md-3"></div>
+          <div className="col col-xl-2 col-lg-3 col-md-4 mt-auto align-bottom">
+            <div className="row">
+              <div className="form-group position-fixed top-0 ml-5 mt-4 px-3">
+                <label
+                  htmlFor="registerInput"
+                  className="d-flex align-items-center text-white"
+                >
+                  <a
+                    href=""
+                    className="text-white"
+                    data-bs-toggle="modal"
+                    data-bs-target="#registerModal"
+                  >
+                    <FontAwesomeIcon icon={faUser} className="me-2" />
+                    ورود/عضویت
+                  </a>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div
-            className="nav nav-pills container-fluid d-flex justify-content-around flex-row-reverse"
+            className="nav nav-pills container-fluid d-flex justify-content-around"
             role="tablist"
           >
             <Current className="p-2" {...currentHandlers} />

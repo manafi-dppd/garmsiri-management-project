@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import "../CheckBox.css"
+import "../CheckBox.css";
 
-const ServiceCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }) => {
+const ServiceCheckboxGroup = ({
+  checkedState,
+  setCheckedState,
+  checkParentStatus,
+}) => {
   const childCheckboxes = [
-      "pumpStation",
-      "cleaningFacilities",
-      "canalDredging",
-      "serviceEquipment",
-    ];
+    "pumpStation",
+    "cleaningFacilities",
+    "canalDredging",
+    "serviceEquipment",
+  ];
 
   const handleParentCheck = () => {
     const newState = !checkedState.Services;
@@ -46,10 +50,7 @@ const ServiceCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus
 
   return (
     <>
-      <div className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-2">
-        <label className="form-check-label me-2" htmlFor="Services" style={{ textDecoration: "underline" }}>
-          سرویس و نگهداری
-        </label>
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -57,21 +58,32 @@ const ServiceCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus
           checked={checkedState.Services}
           onChange={handleParentCheck}
         />
+        <label
+          className="form-check-label me-2"
+          htmlFor="Services"
+          style={{ textDecoration: "underline" }}
+        >
+          سرویس و نگهداری
+        </label>
       </div>
 
       {/* زیرمجموعه‌ها */}
       {checkedState.Services && (
-        <div className="ms-4 mx-3 custom-checkbox" style={{ fontSize: "0.8rem" }}>
+        <div
+          className="ms-4 mx-3 custom-checkbox"
+          style={{ fontSize: "0.8rem" }}
+        >
           {[
             { key: "pumpStation", label: "ایستگاه پمپاژ" },
             { key: "cleaningFacilities", label: "تمیزکاری و لایروبی تاسیسات" },
             { key: "canalDredging", label: "لایروبی سامانه" },
             { key: "serviceEquipment", label: "سرویس و تعمیر جزیی تجهیزات" },
           ].map((item) => (
-            <div key={item.key} className="form-check d-flex justify-content-end align-items-center ms-4 mt-2 mx-4">
-              <label className="form-check-label me-2" htmlFor={item.key}>
-                {item.label}
-              </label>
+            <div
+              key={item.key}
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-4"
+            >
+              
               <input
                 className="form-check-input mx-0"
                 type="checkbox"
@@ -79,6 +91,9 @@ const ServiceCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
+              <label className="form-check-label me-2" htmlFor={item.key}>
+                {item.label}
+              </label>
             </div>
           ))}
         </div>

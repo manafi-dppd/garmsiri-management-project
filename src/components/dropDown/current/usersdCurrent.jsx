@@ -22,7 +22,7 @@ const UsersdCurrent = ({ userData }) => {
     { 
       label: "امور جاری/کاربران", 
       content: (
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-start">
           <button className="btn btn-primary mt-3" onClick={handleOpenModal}>
             ارسال دعوتنامه
           </button>

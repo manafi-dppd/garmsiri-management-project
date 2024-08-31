@@ -9,7 +9,7 @@ class Specifications extends Component {
       <>
         <div className="dropdown">
           <button
-            className="btn btn-secondary dropdown-toggle m-2"
+            className="btn btn-secondary dropdown-toggle d-flex flex-row-reverse align-items-center m-2"
             type="button"
             id="dropdownMenuButton1"
             data-bs-toggle="dropdown"

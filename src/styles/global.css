@@ -1,0 +1,27 @@
+/* global.css */
+
+/* تنظیم جهت کلی برای تمام صفحات */
+body {
+    direction: rtl; /* تنظیم جهت راست به چپ برای کل صفحه */
+    text-align: right; /* تراز متن به راست */
+    font-family: 'Arial', sans-serif; /* انتخاب فونت مناسب */
+  }
+  
+  /* تنظیم راست‌چین بودن برای متن و عناصر بلوکی */
+  .rtl {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  /* تنظیم راست‌چین بودن دکمه‌ها */
+  button, input, select, textarea {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  /* تراز دکمه‌ها به راست */
+  .btn-right {
+    float: right;
+    margin-left: 10px; /* فاصله از سمت چپ برای زیبایی بیشتر */
+  }
+  
