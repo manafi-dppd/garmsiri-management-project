@@ -429,7 +429,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                         disabled={formData.position.length === 0}
                         onClick={toggleAccessLevelModal}
                       >
-                        سطح دسترسی
+                        ویرایش سطح دسترسی
                       </button>
                     </div>
                   </form>
