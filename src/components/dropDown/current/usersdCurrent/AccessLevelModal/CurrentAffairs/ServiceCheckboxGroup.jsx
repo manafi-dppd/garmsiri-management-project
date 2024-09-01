@@ -50,7 +50,7 @@ const ServiceCheckboxGroup = ({
 
   return (
     <>
-      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mx-2">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -59,7 +59,7 @@ const ServiceCheckboxGroup = ({
           onChange={handleParentCheck}
         />
         <label
-          className="form-check-label me-2"
+          className="form-check-label"
           htmlFor="Services"
           style={{ textDecoration: "underline" }}
         >
@@ -81,17 +81,17 @@ const ServiceCheckboxGroup = ({
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-4"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
-                className="form-check-input mx-0"
+                className="form-check-input mx-1"
                 type="checkbox"
                 id={item.key}
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

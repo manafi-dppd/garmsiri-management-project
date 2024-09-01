@@ -50,7 +50,7 @@ const RequestCheckboxGroup = ({
 
   return (
     <>
-      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mx-2">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -59,7 +59,7 @@ const RequestCheckboxGroup = ({
           onChange={handleParentCheck}
         />
         <label
-          className="form-check-label me-2"
+          className="form-check-label"
           htmlFor="requests"
           style={{ textDecoration: "underline" }}
         >
@@ -81,7 +81,7 @@ const RequestCheckboxGroup = ({
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-4"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
@@ -91,7 +91,7 @@ const RequestCheckboxGroup = ({
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

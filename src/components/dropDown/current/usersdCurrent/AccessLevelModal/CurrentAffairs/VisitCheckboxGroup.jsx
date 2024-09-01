@@ -45,7 +45,7 @@ const VisitCheckboxGroup = ({
 
   return (
     <>
-      <div className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+      <div className="form-check d-flex justify-content-start align-items-center ms-4 mx-2">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -54,7 +54,7 @@ const VisitCheckboxGroup = ({
           onChange={handleParentCheck}
         />
         <label
-          className="form-check-label me-2"
+          className="form-check-label"
           htmlFor="visit"
           style={{ textDecoration: "underline" }}
         >
@@ -65,7 +65,7 @@ const VisitCheckboxGroup = ({
       {/* زیرمجموعه‌ها */}
       {checkedState.visit && (
         <div
-          className="ms-4 mx-4 custom-checkbox"
+          className="ms-4 mx-3 custom-checkbox"
           style={{ fontSize: "0.8rem" }}
         >
           {[
@@ -74,17 +74,17 @@ const VisitCheckboxGroup = ({
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
-                className="form-check-input mx-2"
+                className="form-check-input mx-1"
                 type="checkbox"
                 id={item.key}
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

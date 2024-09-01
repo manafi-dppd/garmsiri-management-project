@@ -62,7 +62,7 @@ const DeliveryCheckboxGroup = ({
           onChange={handleParentCheck}
         />
         <label
-          className="form-check-label me-2"
+          className="form-check-label"
           htmlFor="delivery"
           style={{ textDecoration: "underline" }}
         >
@@ -73,7 +73,7 @@ const DeliveryCheckboxGroup = ({
       {/* زیرمجموعه‌ها */}
       {checkedState.delivery && (
         <div
-          className="ms-4 mx-4 custom-checkbox"
+          className="ms-4 mx-3 custom-checkbox"
           style={{ fontSize: "0.8rem" }}
         >
           {[
@@ -90,7 +90,7 @@ const DeliveryCheckboxGroup = ({
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-4"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
             >
               
               <input
@@ -100,7 +100,7 @@ const DeliveryCheckboxGroup = ({
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>
