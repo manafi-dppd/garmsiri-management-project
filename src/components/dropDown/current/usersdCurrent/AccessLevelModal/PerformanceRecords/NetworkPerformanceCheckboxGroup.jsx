@@ -68,12 +68,12 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
         >
           {[
             { key: "networkSpecifications", label: "مشخصات" },
-            { key: "networkMap", label: "نقشه‌های ازبیلت" },
+            { key: "networkMap", label: "نقشه ازبیلت" },
             { key: "networkConsumables", label: "لوازم مصرفی" },
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
@@ -83,7 +83,7 @@ const NetworkPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkP
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

@@ -78,7 +78,7 @@ const SecondStageCheckboxGroup = ({ checkedState, setCheckedState, checkParentSt
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
@@ -88,7 +88,7 @@ const SecondStageCheckboxGroup = ({ checkedState, setCheckedState, checkParentSt
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

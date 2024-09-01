@@ -69,7 +69,7 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
             { key: "bill", label: "دادخواست/دفاعیه/رای" },
             { key: "damages", label: "خسارت و جریمه" },
           ].map((item) => (
-            <div key={item.key} className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2">
+            <div key={item.key} className="form-check d-flex justify-content-start align-items-center ms-4 mx-2">
               
               <input
                 className="form-check-input mx-2"
@@ -78,7 +78,7 @@ const LegalCheckboxGroup = ({ checkedState, setCheckedState, checkParentStatus }
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>

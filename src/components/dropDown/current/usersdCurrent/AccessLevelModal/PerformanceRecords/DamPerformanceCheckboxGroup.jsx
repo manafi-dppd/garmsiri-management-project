@@ -64,12 +64,12 @@ const DamPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkParen
         >
           {[
             { key: "damSpecifications", label: "مشخصات" },
-            { key: "damMap", label: "نقشه‌های ازبیلت" },
+            { key: "damMap", label: "نقشه ازبیلت" },
             { key: "damConsumables", label: "لوازم مصرفی" },
           ].map((item) => (
             <div
               key={item.key}
-              className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
+              className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
               
               <input
@@ -79,7 +79,7 @@ const DamPerformanceCheckboxGroup = ({ checkedState, setCheckedState, checkParen
                 checked={checkedState[item.key]}
                 onChange={() => handleChildCheck(item.key)}
               />
-              <label className="form-check-label me-2" htmlFor={item.key}>
+              <label className="form-check-label" htmlFor={item.key}>
                 {item.label}
               </label>
             </div>
