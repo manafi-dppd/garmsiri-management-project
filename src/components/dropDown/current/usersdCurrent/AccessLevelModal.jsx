@@ -5,7 +5,7 @@ import OperationalRecords from "./AccessLevelModal/OperationalRecords"; // کا�
 import PerformanceRecords from "./AccessLevelModal/PerformanceRecords";
 import StudiesRecords from "./AccessLevelModal/StudiesRecords";
 
-const AccessLevelModal = ({ show, onClose }) => {
+const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
   const [checkedState, setCheckedState] = useState({
     currentAffairs: false,
     operationalRecords: false,
@@ -30,6 +30,13 @@ const AccessLevelModal = ({ show, onClose }) => {
     inspections: false,
     securityOps: false,
   });
+  
+  const handleSave = () => {
+    // کدهای مربوط به عملیات ثبت اطلاعات سطح دسترسی
+    onClose(); // بستن پنجره
+    onAccessLevelSubmit(); // غیرفعال کردن دکمه و بستن پنجره
+    
+  };
 
   return (
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
@@ -80,7 +87,7 @@ const AccessLevelModal = ({ show, onClose }) => {
             >
               انصراف
             </button>
-            <button type="button" className="btn btn-primary">
+            <button type="button" className="btn btn-primary" onClick={handleSave}>
               ثبت
             </button>
           </div>

@@ -19,6 +19,9 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     confirmer: "",
   });
 
+  const [isAccessLevelButtonDisabled, setIsAccessLevelButtonDisabled] =
+    useState(true);
+
   const [showFileInput, setShowFileInput] = useState(false);
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [listSize, setListSize] = useState(4);
@@ -34,6 +37,8 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
         ...prevData,
         [name]: options,
       }));
+      // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
+      setIsAccessLevelButtonDisabled(false);
 
       const specialOptions = [
         "نماینده آب منطقه‌ای",
@@ -125,6 +130,11 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     }));
   };
 
+  const handleAccessLevelSubmit = () => {
+    setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
+    setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
+  };
+
   return (
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
       <div className={`modal-dialog ${modalClass}`}>
@@ -141,101 +151,11 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
           <div className="modal-body">
             <div className="container-fluid">
               <div className="row">
-                {showAdditionalInputs && (
-                  <div
-                    className="col-6 position-absolute"
-                    style={{
-                      top: 0,
-                      left: 0,
-                      borderRight: "1px solid #ccc",
-                      backgroundColor: "white",
-                      height: "100%",
-                      zIndex: 1,
-                    }}
-                  >
-                    <form>
-                      <div className="mb-3 text-end">
-                        <label htmlFor="file" className="form-label">
-                          آپلود معرفی‌نامه
-                        </label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          id="file"
-                          name="file"
-                          accept=".jpg,.jpeg,.png,.pdf"
-                          onChange={handleChange}
-                          required={showFileInput}
-                        />
-                      </div>
-
-                      <div className="mb-3 text-end">
-                        <label htmlFor="issuer" className="form-label">
-                          صادرکننده معرفی‌نامه
-                        </label>
-                        <input
-                          list="issuerOptions"
-                          type="text"
-                          className="form-control text-end"
-                          id="issuer"
-                          name="issuer"
-                          value={formData.issuer}
-                          onChange={handleChange}
-                          required
-                        />
-                        <datalist id="issuerOptions">
-                          <option value="شرکت آب منطقه‌ای کرمانشاه" />
-                          <option value="سازمان جهاد کشاورزی استان کرمانشاه" />
-                        </datalist>
-                      </div>
-
-                      <div className="mb-3 text-end">
-                        <label htmlFor="letterNumber" className="form-label">
-                          شماره معرفی‌نامه
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control text-end"
-                          id="letterNumber"
-                          name="letterNumber"
-                          value={formData.letterNumber}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                      <div className="mb-3 text-end">
-                        <span className="ms-2 mx-2">{formData.letterDate}</span>
-                        <button
-                          type="button"
-                          className="btn btn-info"
-                          onClick={toggleDatePickerModal}
-                        >
-                          تاریخ معرفی‌نامه{" "}
-                        </button>
-                      </div>
-
-                      <div className="mb-3 text-end">
-                        <label htmlFor="confirmer" className="form-label">
-                          تاییدکننده
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control text-end"
-                          id="confirmer"
-                          name="confirmer"
-                          value={formData.confirmer}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                    </form>
-                  </div>
-                )}
+                
                 <div
-                  className={`col-${
-                    showAdditionalInputs ? "6" : "12"
-                  } position-relative`}
-                  style={{ marginLeft: showAdditionalInputs ? "50%" : "0" }}
+                  className={`col-12 ${
+                    showAdditionalInputs ? "col-md-6" : "col-md-12"
+                  }`}                  
                 >
                   <form onSubmit={handleSubmit} className="text-end">
                     <div className="mb-3">
@@ -403,32 +323,127 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                         </select>
                       </div>
                       <div className="me-3">
-                      <input
-                        type="number"
-                        className="form-control text-end"
-                        id="listSize"
-                        name="listSize"
-                        value={listSize}
-                        onChange={handleSizeChange}
-                        min="1"
-                        max="20"
-                        required
-                      />
+                        <input
+                          type="number"
+                          className="form-control text-end"
+                          id="listSize"
+                          name="listSize"
+                          value={listSize}
+                          onChange={handleSizeChange}
+                          min="1"
+                          max="20"
+                          required
+                        />
+                      </div>
                     </div>
-                    </div>
-                    
+
                     <div className="mb-3">
                       <button
                         type="button"
-                        className="btn btn-info"
-                        disabled={formData.position.length === 0}
+                        className="btn btn-secondary"
+                        disabled={isAccessLevelButtonDisabled}
                         onClick={toggleAccessLevelModal}
                       >
                         ویرایش سطح دسترسی
                       </button>
+                      <AccessLevelModal
+                        show={showAccessLevelModal}
+                        onClose={toggleAccessLevelModal}
+                        onAccessLevelSubmit={handleAccessLevelSubmit} // ارسال تابع به AccessLevelModal
+                      />
                     </div>
                   </form>
                 </div>
+                {showAdditionalInputs && (
+                  <div
+                    className="col-12 col-md-6  position-relative"
+                    style={{
+                      top: 0,
+                      left: 0,
+                      borderRight: "1px solid #ccc",
+                      backgroundColor: "white",
+                      height: "100%",
+                      zIndex: 1,
+                    }}
+                  >
+                    <form>
+                      <div className="mb-3 text-end">
+                        <label htmlFor="file" className="form-label">
+                          آپلود معرفی‌نامه
+                        </label>
+                        <input
+                          type="file"
+                          className="form-control"
+                          id="file"
+                          name="file"
+                          accept=".jpg,.jpeg,.png,.pdf"
+                          onChange={handleChange}
+                          required={showFileInput}
+                        />
+                      </div>
+
+                      <div className="mb-3 text-end">
+                        <label htmlFor="issuer" className="form-label">
+                          صادرکننده معرفی‌نامه
+                        </label>
+                        <input
+                          list="issuerOptions"
+                          type="text"
+                          className="form-control text-end"
+                          id="issuer"
+                          name="issuer"
+                          value={formData.issuer}
+                          onChange={handleChange}
+                          required
+                        />
+                        <datalist id="issuerOptions">
+                          <option value="شرکت آب منطقه‌ای کرمانشاه" />
+                          <option value="سازمان جهاد کشاورزی استان کرمانشاه" />
+                        </datalist>
+                      </div>
+
+                      <div className="mb-3 text-end">
+                        <label htmlFor="letterNumber" className="form-label">
+                          شماره معرفی‌نامه
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="letterNumber"
+                          name="letterNumber"
+                          value={formData.letterNumber}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 text-end">
+                        <span className="ms-2 mx-2">{formData.letterDate}</span>
+                        <button
+                          type="button"
+                          className="btn btn-info"
+                          onClick={toggleDatePickerModal}
+                        >
+                          تاریخ معرفی‌نامه{" "}
+                        </button>
+                      </div>
+
+                      <div className="mb-3 text-end">
+                        <label htmlFor="confirmer" className="form-label">
+                          تاییدکننده
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control text-end"
+                          id="confirmer"
+                          name="confirmer"
+                          value={formData.confirmer}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    </form>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -455,10 +470,6 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
         show={showDatePickerModal}
         onClose={toggleDatePickerModal}
         onDateSelect={handleDateSelect}
-      />
-      <AccessLevelModal
-        show={showAccessLevelModal}
-        onClose={toggleAccessLevelModal}
       />
     </div>
   );
