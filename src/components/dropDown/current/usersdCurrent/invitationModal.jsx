@@ -349,7 +349,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                       <AccessLevelModal
                         show={showAccessLevelModal}
                         onClose={toggleAccessLevelModal}
-                        onAccessLevelSubmit={handleAccessLevelSubmit} // ارسال تابع به AccessLevelModal
+                        // onAccessLevelSubmit={handleAccessLevelSubmit} // ارسال تابع به AccessLevelModal
                       />
                     </div>
                   </form>

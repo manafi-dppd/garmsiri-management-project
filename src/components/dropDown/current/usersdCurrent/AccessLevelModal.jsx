@@ -5,7 +5,7 @@ import OperationalRecords from "./AccessLevelModal/OperationalRecords"; // کا�
 import PerformanceRecords from "./AccessLevelModal/PerformanceRecords";
 import StudiesRecords from "./AccessLevelModal/StudiesRecords";
 
-const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
+const AccessLevelModal = ({ show, onClose }) => {
   const [checkedState, setCheckedState] = useState({
     currentAffairs: false,
     operationalRecords: false,
@@ -30,11 +30,30 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
     inspections: false,
     securityOps: false,
   });
+
+    // تابع برای جمع‌آوری وضعیت تمام چک‌باکس‌ها
+  //   const gatherAllCheckBoxes = () => {
+  //     const allCheckBoxes = Object.entries(checkedState).map(([key, value]) => ({
+  //       name: key,
+  //       checked: value,
+  //     }));
+  //     console.log("All Checkboxes:", allCheckBoxes);
+  //   };
+
+  //     // تابع برای بروزرسانی وضعیت چک‌باکس‌ها
+  // const handleCheckboxChange = (name, value) => {
+  //   setCheckedState((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
   
   const handleSave = () => {
+    console.log("Current Checkbox States:", checkedState);
     // کدهای مربوط به عملیات ثبت اطلاعات سطح دسترسی
     onClose(); // بستن پنجره
-    onAccessLevelSubmit(); // غیرفعال کردن دکمه و بستن پنجره
+    // gatherAllCheckBoxes(); // نمایش وضعیت چک‌باکس‌ها در کنسول
+    // onAccessLevelSubmit(); // غیرفعال کردن دکمه و بستن پنجره
     
   };
 
