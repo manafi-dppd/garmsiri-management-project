@@ -31,7 +31,7 @@ const AccessLevelSection = ({
       ...updatedState,
     }));
   };
-
+// Check and update the parent checkbox status based on its children
   const checkParentStatus = () => {
     const isChecked = parentCheckboxes.some(
       ({ key, childCheckboxes }) =>
@@ -45,6 +45,29 @@ const AccessLevelSection = ({
       [sectionKey]: isChecked,
     }));
   };
+
+    // Check if all children are unchecked and hide them
+    const hideChildrenIfAllUnchecked = () => {
+      const areAllChildrenUnchecked = parentCheckboxes.every(
+        ({ key, childCheckboxes }) =>
+          !checkedState[key] &&
+          (!childCheckboxes ||
+            childCheckboxes.every(({ key: childKey }) => !checkedState[childKey]))
+      );
+  
+      if (areAllChildrenUnchecked) {
+        setCheckedState((prevState) => ({
+          ...prevState,
+          [sectionKey]: false,
+        }));
+      }
+    };
+  
+    // Call the hideChildrenIfAllUnchecked function on any change
+    React.useEffect(() => {
+      hideChildrenIfAllUnchecked();
+    }, [checkedState]);
+  
 
   return (
     <div className="p-3">
