@@ -8,7 +8,7 @@ const CheckboxGroup = ({
   checkParentStatus,
   parentKey,
   parentLabel,
-  childCheckboxes,
+  childCheckboxes= [],
 }) => {
   const handleParentCheck = () => {
     const newState = !checkedState[parentKey];
