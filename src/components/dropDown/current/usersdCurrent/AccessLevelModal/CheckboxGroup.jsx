@@ -1,45 +1,49 @@
-import React, { useState } from "react";
-import "../CheckBox.css";
+// CheckboxGroup.js
+import React from "react";
+import "./CheckBox.css";
 
-const MeetingCheckboxGroup = ({
+const CheckboxGroup = ({
   checkedState,
   setCheckedState,
   checkParentStatus,
+  parentKey,
+  parentLabel,
+  childCheckboxes,
 }) => {
-  const childCheckboxes = ["internal", "foreigner"];
-
   const handleParentCheck = () => {
-    const newState = !checkedState.meeting;
+    const newState = !checkedState[parentKey];
 
-    // Set all first stage checkboxes based on the new state
+    // به روز رسانی وضعیت والد و فرزندها
     setCheckedState((prevState) => {
-      const newCheckedState = { ...prevState, meeting: newState };
+      const newCheckedState = { ...prevState, [parentKey]: newState };
 
-      // Update all child checkboxes based on parent checkbox state
+      // به‌روزرسانی تمام چک‌باکس‌های فرزند بر اساس وضعیت جدید والد
       childCheckboxes.forEach((checkbox) => {
-        newCheckedState[checkbox] = newState;
+        newCheckedState[checkbox.key] = newState;
       });
 
       return newCheckedState;
     });
 
-    // Check parent status after updating
+    // بررسی وضعیت والد بعد از بروزرسانی
     checkParentStatus();
   };
 
-  const handleChildCheck = (child) => {
+  const handleChildCheck = (childKey) => {
     setCheckedState((prevState) => {
-      const newCheckedState = { ...prevState, [child]: !prevState[child] };
+      const newCheckedState = { ...prevState, [childKey]: !prevState[childKey] };
 
-      // Check if all children are unchecked and update parent checkbox
+      // اگر همه چک‌باکس‌های فرزند غیرفعال بودند، والد نیز غیرفعال می‌شود
       const allUnchecked = childCheckboxes.every(
-        (checkbox) => !newCheckedState[checkbox]
+        (checkbox) => !newCheckedState[checkbox.key]
       );
 
-      newCheckedState.meeting = !allUnchecked;
+      newCheckedState[parentKey] = !allUnchecked;
 
       return newCheckedState;
     });
+
+    // بررسی وضعیت والد بعد از بروزرسانی
     checkParentStatus();
   };
 
@@ -49,34 +53,27 @@ const MeetingCheckboxGroup = ({
         <input
           className="form-check-input mx-2"
           type="checkbox"
-          id="meeting"
-          checked={checkedState.meeting}
+          id={parentKey}
+          checked={checkedState[parentKey]}
           onChange={handleParentCheck}
         />
         <label
           className="form-check-label"
-          htmlFor="meeting"
+          htmlFor={parentKey}
           style={{ textDecoration: "underline" }}
         >
-          جلسه
+          {parentLabel}
         </label>
       </div>
 
-      {/* زیرمجموعه‌ها */}
-      {checkedState.meeting && (
-        <div
-          className="ms-4 mx-3 custom-checkbox"
-          style={{ fontSize: "0.8rem" }}
-        >
-          {[
-            { key: "internal", label: "داخلی" },
-            { key: "foreigner", label: "خارجی" },
-          ].map((item) => (
+      {/* نمایش زیرمجموعه‌ها */}
+      {checkedState[parentKey] && (
+        <div className="ms-4 mx-3 custom-checkbox" style={{ fontSize: "0.8rem" }}>
+          {childCheckboxes.map((item) => (
             <div
               key={item.key}
               className="form-check d-flex justify-content-start align-items-center ms-4 mx-2"
             >
-              
               <input
                 className="form-check-input mx-1"
                 type="checkbox"
@@ -95,4 +92,4 @@ const MeetingCheckboxGroup = ({
   );
 };
 
-export default MeetingCheckboxGroup;
+export default CheckboxGroup;

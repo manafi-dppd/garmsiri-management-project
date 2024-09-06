@@ -5,7 +5,7 @@ import OperationalRecords from "./AccessLevelModal/OperationalRecords"; // کا�
 import PerformanceRecords from "./AccessLevelModal/PerformanceRecords";
 import StudiesRecords from "./AccessLevelModal/StudiesRecords";
 
-const AccessLevelModal = ({ show, onClose }) => {
+const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
   const [checkedState, setCheckedState] = useState({
     currentAffairs: false,
     operationalRecords: false,
@@ -31,6 +31,19 @@ const AccessLevelModal = ({ show, onClose }) => {
     securityOps: false,
   });
 
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
+  const handleCheckboxChange = (checkboxName, isChecked) => {
+    setSelectedCheckboxes((prevSelected) => {
+      if (isChecked) {
+        return [...prevSelected, checkboxName];
+      } else {
+        return prevSelected.filter((item) => item !== checkboxName);
+      }
+    });
+  };
+  
+
     // تابع برای جمع‌آوری وضعیت تمام چک‌باکس‌ها
   //   const gatherAllCheckBoxes = () => {
   //     const allCheckBoxes = Object.entries(checkedState).map(([key, value]) => ({
@@ -49,12 +62,16 @@ const AccessLevelModal = ({ show, onClose }) => {
   // };
   
   const handleSave = () => {
+    // تبدیل وضعیت چک‌باکس‌ها به آرایه‌ای از مقادیر
+    const values = Object.entries(checkedState)
+      .filter(([key, value]) => value) // فقط چک‌باکس‌های تیک‌خورده را نگه دارید
+      .map(([key]) => key);
+
+    // بروزرسانی مقادیر دسترسی
+    // updateAccessValues(values);
     console.log("Current Checkbox States:", checkedState);
-    // کدهای مربوط به عملیات ثبت اطلاعات سطح دسترسی
-    onClose(); // بستن پنجره
-    // gatherAllCheckBoxes(); // نمایش وضعیت چک‌باکس‌ها در کنسول
-    // onAccessLevelSubmit(); // غیرفعال کردن دکمه و بستن پنجره
-    
+    onClose();
+    onAccessLevelSubmit(checkedState); // ارسال وضعیت چک‌باکس‌ها به InvitationModal
   };
 
   return (
@@ -76,24 +93,28 @@ const AccessLevelModal = ({ show, onClose }) => {
                 <CurrentAffairs
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
+                  onChange={(e) => handleCheckboxChange(e.target.name, e.target.checked)}
                 />
               </div>
               <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <OperationalRecords
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
+                  onChange={(e) => handleCheckboxChange(e.target.name, e.target.checked)}
                 />
               </div>
               <div className="col-12 col-md-6 col-lg-2 border-start border-bottom mb-3">
                 <PerformanceRecords
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
+                  onChange={(e) => handleCheckboxChange(e.target.name, e.target.checked)}
                 />
               </div>
               <div className="col-12 col-md-6 col-lg-3 mb-3 border-bottom">
                 <StudiesRecords
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
+                  onChange={(e) => handleCheckboxChange(e.target.name, e.target.checked)}
                 />
               </div>
             </div>

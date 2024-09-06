@@ -1,100 +1,66 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CurrentAffairs from "./AccessLevelModal/CurrentAffairs"; // کامپوننت "امور جاری"
-import OperationalRecords from "./AccessLevelModal/OperationalRecords"; // کامپوننت جدید "سوابق بهره‌برداری"
-import PerformanceRecords from "./AccessLevelModal/PerformanceRecords";
-import StudiesRecords from "./AccessLevelModal/StudiesRecords";
+import AccessLevelModal from "./AccessLevelModal"; // Import the AccessLevelModal component
 
-const AccessLevelModal = ({ show, onClose }) => {
-  const [checkedState, setCheckedState] = useState({
-    currentAffairs: false,
-    operationalRecords: false,
-    contracts: false,
-    requests: false,
-    report: false,
-    Services: false,
-    repair: false,
-    security: false,
-    letter: false,
-    meeting: false,
-    visit: false,
-    warehouse: false,
-    correspondence: false,
-    circulars: false,
-    standards: false,
-    waterAccounting: false,
-    maintenance: false,
-    warehouseRocords: false,
-    legal: false,
-    reports: false,
-    inspections: false,
-    securityOps: false,
-  });
+const InvitationModal = ({ show, onClose, onSubmit }) => {
+  // ... (initial state and other code)
 
-  const onSubmit = () => {
-    // کدهای مربوط به عملیات ثبت اطلاعات سطح دسترسی
-    console.log("Changes have been submitted.");
+  // Function to log all checkbox values from AccessLevelModal
+  const logAllCheckboxValues = (checkboxValues) => {
+    console.log("Selected Checkbox Values:", checkboxValues);
   };
 
-  const handleSave = () => {
-    // انجام عملیات ثبت داده‌های سطح دسترسی
-    onSubmit(); // فراخوانی تابع onSubmit برای بستن پنجره و اعمال تغییرات
-    onClose(); // بستن پنجره با کلیک روی دکمه ثبت
+  // Modified handleChange function to include logAllCheckboxValues
+  const handleChange = (e) => {
+    const { name, value, type, selectedOptions, files } = e.target;
+    if (type === "select-multiple") {
+      const options = Array.from(selectedOptions).map((option) => option.value);
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: options,
+      }));
+      setIsAccessLevelButtonDisabled(false);
+      
+      // Trigger logging checkbox values when position changes
+      logAllCheckboxValues(selectedCheckboxValues);
+      
+      // ... (existing special options logic)
+    } else if (type === "file") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Modified handleAccessLevelSubmit function to include logAllCheckboxValues
+  const handleAccessLevelSubmit = (selectedCheckboxValues) => {
+    setIsAccessLevelButtonDisabled(true);
+    setShowAccessLevelModal(false);
+
+    // Log the selected checkbox values when access level is submitted
+    logAllCheckboxValues(selectedCheckboxValues);
   };
 
   return (
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
-      <div className="modal-dialog modal-xl">
+      <div className={`modal-dialog ${modalClass}`}>
         <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">سطح دسترسی</h5>
-            <button
-              type="button"
-              className="btn-close"
-              onClick={onClose}
-              style={{ position: "absolute", left: "10px" }}
-            ></button>
-          </div>
-          <div className="modal-body text-end d-flex flex-wrap">
-            <div className="row w-100">
-              <div className="col-12 col-md-6 col-lg-4 border-start border-bottom mb-3">
-                <CurrentAffairs
-                  checkedState={checkedState}
-                  setCheckedState={setCheckedState}
-                />
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
-                <OperationalRecords
-                  checkedState={checkedState}
-                  setCheckedState={setCheckedState}
-                />
-              </div>
-              <div className="col-12 col-md-6 col-lg-2 border-start border-bottom mb-3">
-                <PerformanceRecords
-                  checkedState={checkedState}
-                  setCheckedState={setCheckedState}
-                />
-              </div>
-              <div className="col-12 col-md-6 col-lg-3 mb-3 border-bottom">
-                <StudiesRecords
-                  checkedState={checkedState}
-                  setCheckedState={setCheckedState}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
-              انصراف
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>
-              ثبت
-            </button>
-          </div>
+          {/* ... (existing code) */}
+          <AccessLevelModal
+            show={showAccessLevelModal}
+            onClose={toggleAccessLevelModal}
+            onAccessLevelSubmit={handleAccessLevelSubmit} // Passing handleAccessLevelSubmit to AccessLevelModal
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default AccessLevelModal;
+export default InvitationModal;

@@ -1,17 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../AccessLevelModal.css";
-import ContractCheckboxGroup from "./CurrentAffairs/ContractCheckboxGroup";
-import RequestCheckboxGroup from "./CurrentAffairs/RequestCheckboxGroup";
-import DeliveryCheckboxGroup from "./CurrentAffairs/DeliveryCheckboxGroup";
-import ReportCheckboxGroup from "./CurrentAffairs/ReportCheckboxGroup";
-import ServiceCheckboxGroup from "./CurrentAffairs/ServiceCheckboxGroup";
-import RepairCheckboxGroup from "./CurrentAffairs/RepairCheckboxGroup";
-import SecurityCheckboxGroup from "./CurrentAffairs/SecurityCheckboxGroup";
-import LetterCheckboxGroup from "./CurrentAffairs/LetterCheckboxGroup";
-import MeetingCheckboxGroup from "./CurrentAffairs/MeetingCheckboxGroup";
-import VisitCheckboxGroup from "./CurrentAffairs/VisitCheckboxGroup";
-import WarehouseCheckboxGroup from "./CurrentAffairs/WarehouseCheckboxGroup";
+import CheckboxGroup from "./CheckboxGroup"; // کامپوننت عمومی جدید
 
 const CurrentAffairs = ({ checkedState, setCheckedState }) => {
   const handleParentCheck = () => {
@@ -117,7 +107,7 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
 
   return (
     <div className="p-3">
-      <div className="form-check d-flex justify-content-start align-items-center">        
+      <div className="form-check d-flex justify-content-start align-items-center">
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -133,60 +123,149 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "امور جاری" */}
       {checkedState.currentAffairs && (
         <>
-          <ContractCheckboxGroup
+          {/* استفاده از CheckboxGroup به جای دو کامپوننت قبلی */}
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="contracts"
+            parentLabel="قراردادهای بهره‌برداری"
+            childCheckboxes={[
+              { key: "firstSet", label: "مجموعه اول ایستگاه‌های پمپاژ" },
+              { key: "secondSet", label: "مجموعه دوم ایستگاه‌های پمپاژ" },
+              { key: "irrigationNetwork", label: "شبکه‌های آبیاری" },
+            ]}
           />
-          <RequestCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="requests"
+            parentLabel="درخواست آب"
+            childCheckboxes={[
+              { key: "irrigationCalendar", label: "تقویم آبیاری" },
+              { key: "damRequest", label: "درخواست از سد" },
+              { key: "channelRequest", label: "درخواست از سامانه" },
+              { key: "pumpRequest", label: "درخواست از ایستگاه پمپاژ" },
+            ]}
           />
-          <DeliveryCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="delivery"
+            parentLabel="تحویل آب"
+            childCheckboxes={[
+              { key: "damValve", label: "مانور دریچه‌های سد" },
+              {
+                key: "channelValve",
+                label: "مانور دریچه‌ها و شیرآلات سامانه و مخازن",
+              },
+              { key: "waterLevel", label: "رقوم سطح آب نقاط تحویل" },
+              { key: "gravityFlowmeter", label: "رقوم فلومتر نقاط تحویل ثقلی" },
+              {
+                key: "pumpingFlowmeter",
+                label: "رقوم فلومتر ایستگاه‌های پمپاژ",
+              },
+              { key: "meterNumber", label: "رقوم کنتور مزارع" },
+              { key: "deliveryMinutes", label: "صورتجلسه تحویل" },
+            ]}
           />
-          <ReportCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="report"
+            parentLabel="گزارش"
+            childCheckboxes={[
+              { key: "periodic", label: "دوره‌ای" },
+              { key: "case", label: "موردی" },
+              { key: "pumpingMoment", label: "لحظه‌ای پمپاژ" },
+              { key: "dailyPumping", label: "روزانه پمپاژ" },
+            ]}
           />
-          <ServiceCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="Services"
+            parentLabel="سرویس و نگهداری"
+            childCheckboxes={[
+              { key: "pumpStation", label: "ایستگاه پمپاژ" },
+              {
+                key: "cleaningFacilities",
+                label: "تمیزکاری و لایروبی تاسیسات",
+              },
+              { key: "canalDredging", label: "لایروبی سامانه" },
+              { key: "serviceEquipment", label: "سرویس و تعمیر جزیی تجهیزات" },
+            ]}
           />
-          <RepairCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="repair"
+            parentLabel="تعمیر"
+            childCheckboxes={[
+              { key: "damChannel", label: "سد و سامانه" },
+              { key: "pumpingStation", label: "ایستگاه پمپاژ" },
+              { key: "repairIrrigationNetwork", label: "شبکه‌های آبیاری" },
+            ]}
           />
-          <SecurityCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="security"
+            parentLabel="حراست"
+            childCheckboxes={[
+              { key: "shiftSchedule", label: "برنامه شیفت نگهبانان" },
+              { key: "visitReport", label: "گزارش بازدید" },
+            ]}
           />
-          <LetterCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="letter"
+            parentLabel="نامه نگاری"
+            childCheckboxes={[
+              { key: "arrived", label: "وارده" },
+              { key: "issued", label: "صادره" },
+            ]}
           />
-          <MeetingCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="meeting"
+            parentLabel="جلسه"
+            childCheckboxes={[
+              { key: "internal", label: "داخلی" },
+              { key: "foreigner", label: "خارجی" },
+            ]}
           />
-          <VisitCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="visit"
+            parentLabel="بازدید"
+            childCheckboxes={[
+              { key: "operational", label: "عملیاتی" },
+              { key: "authorities", label: "مقامات و مسئولین" },
+            ]}
           />
-          <WarehouseCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="warehouse"
+            parentLabel="انبار"
+            childCheckboxes={[
+              { key: "request", label: "درخواست کالا" },
+              { key: "entryExit", label: "ورود/خروج" },
+            ]}
           />
           {[
             { key: "circulars", label: "بخشنامه‌ها" },
@@ -197,7 +276,6 @@ const CurrentAffairs = ({ checkedState, setCheckedState }) => {
               key={item.key}
               className="form-check d-flex justify-content-start align-items-center ms-4 mt-2 mx-2"
             >
-              
               <input
                 className="form-check-input mx-2"
                 type="checkbox"

@@ -26,6 +26,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [listSize, setListSize] = useState(4);
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
+  const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -113,7 +114,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   };
 
   const modalClass = showAdditionalInputs ? "modal-lg" : "modal-md";
-  const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
+  
 
   const toggleAccessLevelModal = () => {
     setShowAccessLevelModal((prevState) => !prevState);
@@ -131,7 +132,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   };
 
   const handleAccessLevelSubmit = () => {
-    setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
+    // setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
     setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
   };
 
@@ -346,11 +347,11 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                       >
                         ویرایش سطح دسترسی
                       </button>
-                      <AccessLevelModal
+                      {/* <AccessLevelModal
                         show={showAccessLevelModal}
                         onClose={toggleAccessLevelModal}
                         // onAccessLevelSubmit={handleAccessLevelSubmit} // ارسال تابع به AccessLevelModal
-                      />
+                      /> */}
                     </div>
                   </form>
                 </div>
@@ -466,11 +467,21 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
           </div>
         </div>
       </div>
-      <DatePickerModal
-        show={showDatePickerModal}
-        onClose={toggleDatePickerModal}
-        onDateSelect={handleDateSelect}
-      />
+      {showDatePickerModal && (
+        <DatePickerModal
+          show={showDatePickerModal}
+          onClose={toggleDatePickerModal}
+          onDateSelect={handleDateSelect}
+          selectedDate={formData.letterDate}
+        />
+      )}
+      {showAccessLevelModal && (
+        <AccessLevelModal
+          show={showAccessLevelModal}
+          onClose={toggleAccessLevelModal}
+          onAccessLevelSubmit={handleAccessLevelSubmit}
+        />
+      )}
     </div>
   );
 };

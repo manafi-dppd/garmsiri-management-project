@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../AccessLevelModal.css";
-import AccountingCheckboxGroup from "./OperationalRecords/AccountingCheckboxGroup";
-import RepairsCheckboxGroup from "./OperationalRecords/RepairsCheckboxGroup";
-import ServiceRecordsCheckboxGroup from "./OperationalRecords/ServiceRecordsCheckboxGroup";
-import WarehouseRecordsCheckboxGroup from "./OperationalRecords/WarehouseRecordsCheckboxGroup";
-import LegalCheckboxGroup from "./OperationalRecords/LegalCheckboxGroup";
+import CheckboxGroup from "./CheckboxGroup";
 
 const OperationalRecords = ({ checkedState, setCheckedState }) => {
   const handleParentCheck = () => {
@@ -95,7 +91,6 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
   return (
     <div className="p-3">
       <div className="form-check d-flex justify-content-start align-items-center">
-        
         <input
           className="form-check-input mx-2"
           type="checkbox"
@@ -111,30 +106,78 @@ const OperationalRecords = ({ checkedState, setCheckedState }) => {
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "سوابق بهره‌برداری" */}
       {checkedState.operationalRecords && (
         <>
-          <AccountingCheckboxGroup
+          {/* استفاده از CheckboxGroup به جای دو کامپوننت قبلی */}
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="accounting"
+            parentLabel="حسابداری آب"
+            childCheckboxes={[
+              { key: "damBalance", label: "بیلان سد" },
+              { key: "channelBalance", label: "بیلان سامانه" },
+              { key: "recordsIrrigationCalendar", label: "تقویم آبیاری" },
+              { key: "irrigationProgram", label: "برنامه آبیاری" },
+              { key: "waterDelivery", label: "تحویل آب" },
+              { key: "rain", label: "بارندگی" },
+              { key: "dashboard", label: "داشبورد" },
+              { key: "deliveryMinutes", label: "صورتجلسات تحویل آب" },
+            ]}
           />
-          <RepairsCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="repairs"
+            parentLabel="تعمیرات"
+            childCheckboxes={[
+              { key: "operation", label: "عملیات" },
+              { key: "manpowerMachinery", label: "نیروی انسانی و ماشین‌آلات" },
+              { key: "consumables", label: "لوازم مصرفی" },
+              { key: "repairCosts", label: "هزینه‌ها" },
+              { key: "repairsDashboard", label: "داشبورد" },
+            ]}
           />
-          <ServiceRecordsCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="serviceRecords"
+            parentLabel="سرویس و نگهداری"
+            childCheckboxes={[
+              { key: "serviceOperation", label: "عملیات" },
+              {
+                key: "serviceManpowerMachinery",
+                label: "نیروی انسانی و ماشین‌آلات",
+              },
+              { key: "serviceConsumables", label: "لوازم مصرفی" },
+              { key: "serviceCosts", label: "هزینه‌ها" },
+              { key: "serviceDashboard", label: "داشبورد" },
+            ]}
           />
-          <WarehouseRecordsCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="warehouseRocords"
+            parentLabel="انبار"
+            childCheckboxes={[
+              { key: "inventory", label: "موجودی" },
+              { key: "inOut", label: "ورود/خروج" },
+            ]}
           />
-          <LegalCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="legal"
+            parentLabel="امور حقوقی"
+            childCheckboxes={[
+              { key: "realEstate", label: "فهرست و اسناد املاک" },
+            { key: "opposite", label: "معارض" },
+            { key: "bill", label: "دادخواست/دفاعیه/رای" },
+            { key: "damages", label: "خسارت و جریمه" },
+            ]}
           />
           {[
             { key: "securityOps", label: "حراست" },

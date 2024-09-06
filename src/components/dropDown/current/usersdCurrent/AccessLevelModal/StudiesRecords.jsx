@@ -1,8 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../AccessLevelModal.css";
-import FirstStageCheckboxGroup from "./StudiesRecords/FirstStageCheckboxGroup";
-import SecondStageCheckboxGroup from "./StudiesRecords/SecondStageCheckboxGroup";
+import CheckboxGroup from "./CheckboxGroup";
 
 const StudiesRecords = ({ checkedState, setCheckedState }) => {
   const handleParentCheck = () => {
@@ -56,15 +55,52 @@ const StudiesRecords = ({ checkedState, setCheckedState }) => {
       {/* نمایش زیرمجموعه‌ها در صورت فعال بودن "سوابق مطالعات" */}
       {checkedState.studiesRecords && (
         <>
-          <FirstStageCheckboxGroup
+        <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="firstStage"
+            parentLabel="مرحله اول"
+            childCheckboxes={[
+              { key: "geology", label: "زمین شناسی و ژئوتکنیک" },
+            { key: "soilScience", label: "خاکشناسی" },
+            { key: "meteorology", label: "هواشناسی و هیدرولوژی" },
+            { key: "environment", label: "محیط زیست" },
+            { key: "sociology", label: "جامعه شناسی" },
+            { key: "agriculture", label: "کشاورزی و دامپروری" },
+            { key: "irrigationDrainage", label: "آبیاری و زهکشی" },
+            { key: "economy", label: "اقتصاد طرح" },
+            ]}
           />
-          <SecondStageCheckboxGroup
+          <CheckboxGroup
             checkedState={checkedState}
             setCheckedState={setCheckedState}
             checkParentStatus={checkParentStatus}
+            parentKey="firstStage"
+            parentLabel="مرحله اول"
+            childCheckboxes={[
+              { key: "geology", label: "زمین شناسی و ژئوتکنیک" },
+            { key: "soilScience", label: "خاکشناسی" },
+            { key: "meteorology", label: "هواشناسی و هیدرولوژی" },
+            { key: "environment", label: "محیط زیست" },
+            { key: "sociology", label: "جامعه شناسی" },
+            { key: "agriculture", label: "کشاورزی و دامپروری" },
+            { key: "irrigationDrainage", label: "آبیاری و زهکشی" },
+            { key: "economy", label: "اقتصاد طرح" },
+            ]}
+          />
+          <CheckboxGroup
+            checkedState={checkedState}
+            setCheckedState={setCheckedState}
+            checkParentStatus={checkParentStatus}
+            parentKey="secondStage"
+            parentLabel="مرحله دوم"
+            childCheckboxes={[
+              { key: "dam", label: "سد" },
+            { key: "channel", label: "سامانه" },
+            { key: "pumping", label: "ایستگاه‌های پمپاژ" },
+            { key: "irrigationNetworks", label: "شبکه‌های آبیاری" },
+            ]}
           />
         </>
       )}
