@@ -55,7 +55,7 @@ const AccessLevelSection = ({
             childCheckboxes.every(({ key: childKey }) => !checkedState[childKey]))
       );
   
-      if (areAllChildrenUnchecked) {
+      if (areAllChildrenUnchecked && checkedState[sectionKey] !== false) {
         setCheckedState((prevState) => ({
           ...prevState,
           [sectionKey]: false,

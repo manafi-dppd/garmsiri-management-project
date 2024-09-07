@@ -82,7 +82,7 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
           </div>
           <div className="modal-body text-end d-flex flex-wrap">
             <div className="row w-100">
-              <div className="col-12 col-md-6 col-lg-4 border-start border-bottom mb-3">
+              <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <AccessLevelSection
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
@@ -301,7 +301,7 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                   ]}
                 />
               </div>
-              <div className="col-12 col-md-6 col-lg-2 border-start border-bottom mb-3">
+              <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <AccessLevelSection
                   checkedState={checkedState}
                   setCheckedState={setCheckedState}
