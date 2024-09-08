@@ -5,8 +5,8 @@ const ReportCurrent = () => {
     { label: "امور جاری/گزارش:", content: "" },
     { label: "دوره‌ای", content: "دوره‌ای" },
     { label: "موردی", content: "موردی" },
-    { label: "لحظه‌ای پمپاژ", content: "لحظه‌ای پمپاژ" },
-    { label: "روزانه پمپاژ", content: "روزانه پمپاژ" },
+    { label: "پمپاژ لحظه‌ای", content: "پمپاژ لحظه‌ای" },
+    { label: "پمپاژ روزانه", content: "پمپاژ روزانه" },
   ];
 
   return (

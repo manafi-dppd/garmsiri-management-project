@@ -11,28 +11,155 @@ const AccessLevelModal = ({
   updateAccessLevels,
 }) => {
   const [checkedState, setCheckedState] = useState({
+    // امور جاری
     currentAffairs: false,
-    operationalRecords: false,
+    // قراردادهای بهره‌برداری
     contracts: false,
+    firstPumpStationGroup: false,
+    secondPumpStationGroup: false,
+    irrigationNetworks: false,
+    // درخواست آب
     requests: false,
+    irrigationCalendar: false,
+    requestFromDam: false,
+    requestFromChannel: false,
+    requestFromPump: false,
+    // تحویل آب
+    delivery: false,
+    maneuveringTheDamValves: false,
+    maneuverValvesOfChannelAndTanks: false,
+    numberOfWaterLevelOfDeliveryPoints: false,
+    flowmeterNumberOfGravityDeliveryPoints: false,
+    numberOfFlowMetersOfPumpingStations: false,
+    farmMeterNumber: false,
+    deliveryMinutes: false,
+    // گزارش
     report: false,
-    Services: false,
+    periodic: false,
+    case: false,
+    instantaneousPumping: false,
+    dailyPumping: false,
+    // سرویس و نگهداری
+    services: false,
+    pumpStationService: false,
+    cleaningAndDredgingFacilities: false,
+    canalDredging: false,
+    serviceAndPartialRepairOfEquipment: false,
+    // تعمیر
     repair: false,
+    damChannel: false,
+    pumpingStationRepair: false,
+    irrigationNetworkRepair: false,
+    // حراست
     security: false,
+    GuardShiftSchedule: false,
+    visitReport: false,
+    // نامه نگاری
     letter: false,
+    arrived: false,
+    issued: false,
+    // جلسه
     meeting: false,
+    internal: false,
+    foreigner: false,
+    // بازدید
     visit: false,
+    operational: false,
+    authorities: false,
+    // انبار
     warehouse: false,
-    correspondence: false,
+    commodityRequest: false,
+    entryExit: false,
+    // بخشنامه‌ها
     circulars: false,
+    // استانداردها و دستورالعمل‌ها
     standards: false,
+    // کاربران
+    users: false,
+    // سوابق بهره‌برداری
+    operationalRecords: false,
+    // حسابداری آب
     waterAccounting: false,
-    maintenance: false,
+    damBalance: false,
+    channelBalance: false,
+    irrigationCalendarRecords: false,
+    irrigationProgram: false,
+    waterDelivery: false,
+    rain: false,
+    waterAccountingDashboard: false,
+    waterDeliveryMinutes: false,
+    // تعمیرات
+    repairs: false,
+    repairOperation: false,
+    manpowerAndMachinery: false,
+    consumables: false,
+    repairCosts: false,
+    repairsDashboard: false,
+    // سرویس و نگهداری
+    serviceRecords: false,
+    serviceAndMaintenanceOperations: false,
+    serviceManpowerMachinery: false,
+    serviceConsumables: false,
+    serviceCosts: false,
+    serviceDashboard: false,
+    // انبار
     warehouseRocords: false,
+    inventory: false,
+    inOut: false,
+    // امور حقوقی
     legal: false,
-    reports: false,
-    inspections: false,
+    inventoryAndRealEstateDocuments: false,
+    opposite: false,
+    petitionDefenseOpinion: false,
+    damagesAndFines: false,
+    // حراست
     securityOps: false,
+    // مکاتبات
+    correspondence: false,
+    // گزارشات
+    reports: false,
+    // بازدیدها
+    inspections: false,
+    // سوابق اجرا
+    performanceRecords: false,
+    // سد
+    damPerformance: false,
+    damSpecifications: false,
+    damPlan: false,
+    damConsumables: false,
+    // سامانه
+    channelPerformance: false,
+    channelSpecifications: false,
+    channelPlan: false,
+    channelConsumables: false,
+    // ایستگاه پمپاژ
+    pumpPerformance: false,
+    pumpSpecifications: false,
+    pumpPlan: false,
+    pumpConsumables: false,
+    // شبکه
+    networkPerformance: false,
+    networkSpecifications: false,
+    networkPlan: false,
+    networkConsumables: false,
+    // سوابق مطالعات
+    studiesRecords: false,
+    // مرحله اول
+    firstStage: false,
+    geology: false,
+    soilScience: false,
+    meteorology: false,
+    environment: false,
+    sociology: false,
+    agriculture: false,
+    irrigationDrainage: false,
+    economy: false,
+    // مرحله دوم
+    secondStage: false,
+    damSecondStage: false,
+    channelSecondStage: false,
+    pumpingSecondStage: false,
+    networksSecondStage: false,
   });
   const [disabledState, setDisabledState] = useState({});
 
@@ -104,11 +231,11 @@ const AccessLevelModal = ({
                           label: "مجموعه اول ایستگاه‌های پمپاژ",
                         },
                         {
-                          key: "secondSet",
+                          key: "secondPumpStationGroup",
                           label: "مجموعه دوم ایستگاه‌های پمپاژ",
                         },
                         {
-                          key: "irrigationNetwork",
+                          key: "irrigationNetworks",
                           label: "شبکه‌های آبیاری",
                         },
                       ],
@@ -119,9 +246,9 @@ const AccessLevelModal = ({
                       childCheckboxes: [
                         { key: "irrigationCalendar", label: "تقویم آبیاری" },
                         { key: "requestFromDam", label: "درخواست از سد" },
-                        { key: "channelRequest", label: "درخواست از سامانه" },
+                        { key: "requestFromChannel", label: "درخواست از سامانه" },
                         {
-                          key: "pumpRequest",
+                          key: "requestFromPump",
                           label: "درخواست از ایستگاه پمپاژ",
                         },
                       ],
@@ -130,24 +257,24 @@ const AccessLevelModal = ({
                       key: "delivery",
                       label: "تحویل آب",
                       childCheckboxes: [
-                        { key: "damValve", label: "مانور دریچه‌های سد" },
+                        { key: "maneuveringTheDamValves", label: "مانور دریچه‌های سد" },
                         {
-                          key: "channelValve",
+                          key: "maneuverValvesOfChannelAndTanks",
                           label: "مانور دریچه‌ها و شیرآلات سامانه و مخازن",
                         },
                         {
-                          key: "waterLevel",
+                          key: "numberOfWaterLevelOfDeliveryPoints",
                           label: "رقوم سطح آب نقاط تحویل",
                         },
                         {
-                          key: "gravityFlowmeter",
+                          key: "flowmeterNumberOfGravityDeliveryPoints",
                           label: "رقوم فلومتر نقاط تحویل ثقلی",
                         },
                         {
-                          key: "pumpingFlowmeter",
+                          key: "numberOfFlowMetersOfPumpingStations",
                           label: "رقوم فلومتر ایستگاه‌های پمپاژ",
                         },
-                        { key: "meterNumber", label: "رقوم کنتور مزارع" },
+                        { key: "farmMeterNumber", label: "رقوم کنتور مزارع" },
                         { key: "deliveryMinutes", label: "صورتجلسه تحویل" },
                       ],
                     },
@@ -157,22 +284,22 @@ const AccessLevelModal = ({
                       childCheckboxes: [
                         { key: "periodic", label: "دوره‌ای" },
                         { key: "case", label: "موردی" },
-                        { key: "pumpingMoment", label: "لحظه‌ای پمپاژ" },
-                        { key: "dailyPumping", label: "روزانه پمپاژ" },
+                        { key: "instantaneousPumping", label: "پمپاژ لحظه‌ای" },
+                        { key: "dailyPumping", label: "پمپاژ روزانه" },
                       ],
                     },
                     {
-                      key: "Services",
+                      key: "services",
                       label: "سرویس و نگهداری",
                       childCheckboxes: [
-                        { key: "pumpStation", label: "ایستگاه پمپاژ" },
+                        { key: "pumpStationService", label: "ایستگاه پمپاژ" },
                         {
-                          key: "cleaningFacilities",
+                          key: "cleaningAndDredgingFacilities",
                           label: "تمیزکاری و لایروبی تاسیسات",
                         },
                         { key: "canalDredging", label: "لایروبی سامانه" },
                         {
-                          key: "serviceEquipment",
+                          key: "serviceAndPartialRepairOfEquipment",
                           label: "سرویس و تعمیر جزیی تجهیزات",
                         },
                       ],
@@ -182,9 +309,9 @@ const AccessLevelModal = ({
                       label: "تعمیر",
                       childCheckboxes: [
                         { key: "damChannel", label: "سد و سامانه" },
-                        { key: "pumpingStation", label: "ایستگاه پمپاژ" },
+                        { key: "pumpingStationRepair", label: "ایستگاه پمپاژ" },
                         {
-                          key: "repairIrrigationNetwork",
+                          key: "irrigationNetworkRepair",
                           label: "شبکه‌های آبیاری",
                         },
                       ],
@@ -194,7 +321,7 @@ const AccessLevelModal = ({
                       label: "حراست",
                       childCheckboxes: [
                         {
-                          key: "shiftSchedule",
+                          key: "GuardShiftSchedule",
                           label: "برنامه شیفت نگهبانان",
                         },
                         { key: "visitReport", label: "گزارش بازدید" },
@@ -228,7 +355,7 @@ const AccessLevelModal = ({
                       key: "warehouse",
                       label: "انبار",
                       childCheckboxes: [
-                        { key: "request", label: "درخواست کالا" },
+                        { key: "commodityRequest", label: "درخواست کالا" },
                         { key: "entryExit", label: "ورود/خروج" },
                       ],
                     },
@@ -258,15 +385,15 @@ const AccessLevelModal = ({
                         { key: "damBalance", label: "بیلان سد" },
                         { key: "channelBalance", label: "بیلان سامانه" },
                         {
-                          key: "recordsIrrigationCalendar",
+                          key: "irrigationCalendarRecords",
                           label: "تقویم آبیاری",
                         },
                         { key: "irrigationProgram", label: "برنامه آبیاری" },
                         { key: "waterDelivery", label: "تحویل آب" },
                         { key: "rain", label: "بارندگی" },
-                        { key: "dashboard", label: "داشبورد" },
+                        { key: "waterAccountingDashboard", label: "داشبورد" },
                         {
-                          key: "deliveryMinutes",
+                          key: "waterDeliveryMinutes",
                           label: "صورتجلسات تحویل آب",
                         },
                       ],
@@ -275,9 +402,9 @@ const AccessLevelModal = ({
                       key: "repairs",
                       label: "تعمیرات",
                       childCheckboxes: [
-                        { key: "operation", label: "عملیات" },
+                        { key: "repairOperation", label: "عملیات" },
                         {
-                          key: "manpowerMachinery",
+                          key: "manpowerAndMachinery",
                           label: "نیروی انسانی و ماشین‌آلات",
                         },
                         { key: "consumables", label: "لوازم مصرفی" },
@@ -289,7 +416,7 @@ const AccessLevelModal = ({
                       key: "serviceRecords",
                       label: "سرویس و نگهداری",
                       childCheckboxes: [
-                        { key: "serviceOperation", label: "عملیات" },
+                        { key: "serviceAndMaintenanceOperations", label: "عملیات" },
                         {
                           key: "serviceManpowerMachinery",
                           label: "نیروی انسانی و ماشین‌آلات",
@@ -311,10 +438,10 @@ const AccessLevelModal = ({
                       key: "legal",
                       label: "امور حقوقی",
                       childCheckboxes: [
-                        { key: "realEstate", label: "فهرست و اسناد املاک" },
+                        { key: "inventoryAndRealEstateDocuments", label: "فهرست و اسناد املاک" },
                         { key: "opposite", label: "معارض" },
-                        { key: "bill", label: "دادخواست/دفاعیه/رای" },
-                        { key: "damages", label: "خسارت و جریمه" },
+                        { key: "petitionDefenseOpinion", label: "دادخواست/دفاعیه/رای" },
+                        { key: "damagesAndFines", label: "خسارت و جریمه" },
                       ],
                     },
                     { key: "securityOps", label: "حراست" },
@@ -338,7 +465,7 @@ const AccessLevelModal = ({
                       label: "سد",
                       childCheckboxes: [
                         { key: "damSpecifications", label: "مشخصات" },
-                        { key: "damMap", label: "نقشه ازبیلت" },
+                        { key: "damPlan", label: "نقشه ازبیلت" },
                         { key: "damConsumables", label: "لوازم مصرفی" },
                       ],
                     },
@@ -347,7 +474,7 @@ const AccessLevelModal = ({
                       label: "سامانه",
                       childCheckboxes: [
                         { key: "channelSpecifications", label: "مشخصات" },
-                        { key: "channelMap", label: "نقشه ازبیلت" },
+                        { key: "channelPlan", label: "نقشه ازبیلت" },
                         { key: "channelConsumables", label: "لوازم مصرفی" },
                       ],
                     },
@@ -356,7 +483,7 @@ const AccessLevelModal = ({
                       label: "ایستگاه پمپاژ",
                       childCheckboxes: [
                         { key: "pumpSpecifications", label: "مشخصات" },
-                        { key: "pumpMap", label: "نقشه ازبیلت" },
+                        { key: "pumpPlan", label: "نقشه ازبیلت" },
                         { key: "pumpConsumables", label: "لوازم مصرفی" },
                       ],
                     },
@@ -365,7 +492,7 @@ const AccessLevelModal = ({
                       label: "شبکه",
                       childCheckboxes: [
                         { key: "networkSpecifications", label: "مشخصات" },
-                        { key: "networkMap", label: "نقشه ازبیلت" },
+                        { key: "networkPlan", label: "نقشه ازبیلت" },
                         { key: "networkConsumables", label: "لوازم مصرفی" },
                       ],
                     },
@@ -402,11 +529,11 @@ const AccessLevelModal = ({
                       key: "secondStage",
                       label: "مرحله دوم",
                       childCheckboxes: [
-                        { key: "dam", label: "سد" },
-                        { key: "channel", label: "سامانه" },
-                        { key: "pumping", label: "ایستگاه‌های پمپاژ" },
+                        { key: "damSecondStage", label: "سد" },
+                        { key: "channelSecondStage", label: "سامانه" },
+                        { key: "pumpingSecondStage", label: "ایستگاه‌های پمپاژ" },
                         {
-                          key: "irrigationNetworks",
+                          key: "networksSecondStage",
                           label: "شبکه‌های آبیاری",
                         },
                       ],

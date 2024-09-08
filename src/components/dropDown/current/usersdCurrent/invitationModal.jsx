@@ -43,6 +43,10 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
       setIsAccessLevelButtonDisabled(false);
       setSelectedPosition(options[0]);
+
+      // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
+    const isAdminSelected = options.includes("ادمین وبسایت");
+    setIsAccessLevelButtonDisabled(isAdminSelected);
       const specialOptions = [
         "نماینده آب منطقه‌ای",
         "نماینده آببران ذهاب جنوبی",
