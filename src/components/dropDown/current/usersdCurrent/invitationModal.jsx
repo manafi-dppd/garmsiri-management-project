@@ -25,6 +25,8 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   const [showFileInput, setShowFileInput] = useState(false);
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [listSize, setListSize] = useState(4);
+  const [accessLevels, setAccessLevels] = useState({});
+  const [selectedPosition, setSelectedPosition] = useState("");
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
 
@@ -40,7 +42,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       }));
       // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
       setIsAccessLevelButtonDisabled(false);
-
+      setSelectedPosition(options[0]);
       const specialOptions = [
         "نماینده آب منطقه‌ای",
         "نماینده آببران ذهاب جنوبی",
@@ -131,9 +133,14 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     }));
   };
 
-  const handleAccessLevelSubmit = () => {
+  const handleAccessLevelSubmit = (updatedAccessLevels) => {
+    setAccessLevels(updatedAccessLevels);
     // setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
     setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
+  };
+
+  const updateAccessLevels = (levels) => {
+    console.log("Checkbox States:", levels);
   };
 
   return (
@@ -343,7 +350,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                         type="button"
                         className="btn btn-secondary"
                         disabled={isAccessLevelButtonDisabled}
-                        onClick={toggleAccessLevelModal}
+                        onClick={() => setShowAccessLevelModal(true)}
                       >
                         ویرایش سطح دسترسی
                       </button>
@@ -477,9 +484,12 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       )}
       {showAccessLevelModal && (
         <AccessLevelModal
-          show={showAccessLevelModal}
-          onClose={toggleAccessLevelModal}
-          onAccessLevelSubmit={handleAccessLevelSubmit}
+        show={showAccessLevelModal}
+        onClose={() => setShowAccessLevelModal(false)}
+        onAccessLevelSubmit={handleAccessLevelSubmit}
+        selectedPosition={selectedPosition}
+        // ارسال تابع به AccessLevelModal
+        updateAccessLevels={updateAccessLevels}
         />
       )}
     </div>

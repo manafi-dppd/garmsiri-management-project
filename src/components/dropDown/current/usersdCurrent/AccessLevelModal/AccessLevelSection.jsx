@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../AccessLevelModal.css";
 import CheckboxGroup from "./CheckboxGroup";
@@ -8,11 +8,27 @@ const AccessLevelSection = ({
   setCheckedState,
   sectionKey,
   sectionLabel,
+  onCheckboxChange,
   parentCheckboxes = [],
 }) => {
+  const renderCheckboxes = (keys) => {
+    return keys.map((key) => (
+      <div className="form-check" key={key}>
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id={key}
+          checked={checkedState[key]}
+          onChange={() => onCheckboxChange(key)}
+        />
+        <label className="form-check-label" htmlFor={key}>
+          {key}
+        </label>
+      </div>
+    ));
+  };
   const handleParentCheck = () => {
     const newState = !checkedState[sectionKey];
-
     // Set all checkboxes based on the new state
     const updatedState = { [sectionKey]: newState };
     parentCheckboxes.forEach(({ key, childCheckboxes }) => {
@@ -31,7 +47,33 @@ const AccessLevelSection = ({
       ...updatedState,
     }));
   };
-// Check and update the parent checkbox status based on its children
+
+  React.useEffect(() => {
+    expandCheckboxes(); // زمانی که کامپوننت بارگذاری می‌شود، چک‌باکس‌ها را باز کن
+  }, []);
+    const expandCheckboxes = () => {
+  setCheckedState((prevState) => {
+    const newState = { ...prevState };
+
+    parentCheckboxes.forEach(({ key, childCheckboxes }) => {
+      // اگر یک چک‌باکس فعال است، والدین آن و زیرمجموعه‌هایش را باز کن
+      if (prevState[key]) {
+        newState[sectionKey] = true; // اطمینان حاصل شود که بخش اصلی نیز باز است
+        newState[key] = true; // اطمینان حاصل شود که والدین باز هستند
+
+        // برای باز کردن زیرمجموعه‌ها
+        if (childCheckboxes) {
+          childCheckboxes.forEach(({ key: childKey }) => {
+            newState[childKey] = true;
+          });
+        }
+      }
+    });
+
+    return newState;
+  });
+};
+  // Check and update the parent checkbox status based on its children
   const checkParentStatus = () => {
     const isChecked = parentCheckboxes.some(
       ({ key, childCheckboxes }) =>
@@ -46,28 +88,31 @@ const AccessLevelSection = ({
     }));
   };
 
-    // Check if all children are unchecked and hide them
-    const hideChildrenIfAllUnchecked = () => {
-      const areAllChildrenUnchecked = parentCheckboxes.every(
-        ({ key, childCheckboxes }) =>
-          !checkedState[key] &&
-          (!childCheckboxes ||
-            childCheckboxes.every(({ key: childKey }) => !checkedState[childKey]))
-      );
-  
-      if (areAllChildrenUnchecked && checkedState[sectionKey] !== false) {
-        setCheckedState((prevState) => ({
-          ...prevState,
-          [sectionKey]: false,
-        }));
-      }
-    };
-  
-    // Call the hideChildrenIfAllUnchecked function on any change
-    React.useEffect(() => {
-      hideChildrenIfAllUnchecked();
-    }, [checkedState]);
-  
+  // Check if all children are unchecked and hide them
+  const hideChildrenIfAllUnchecked = () => {
+    const areAllChildrenUnchecked = parentCheckboxes.every(
+      ({ key, childCheckboxes }) =>
+        !checkedState[key] &&
+        (!childCheckboxes ||
+          childCheckboxes.every(({ key: childKey }) => !checkedState[childKey]))
+    );
+
+    if (areAllChildrenUnchecked && checkedState[sectionKey] !== false) {
+      setCheckedState((prevState) => ({
+        ...prevState,
+        [sectionKey]: false,
+      }));
+    }
+  };
+
+
+  // Call the hideChildrenIfAllUnchecked function on any change
+  // React.useEffect(() => {
+  //   hideChildrenIfAllUnchecked();
+  // }, [checkedState]);
+
+
+
 
   return (
     <div className="p-3">

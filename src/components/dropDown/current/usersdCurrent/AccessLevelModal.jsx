@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccessLevelSection from "./AccessLevelModal/AccessLevelSection";
+import useAccessLevelEffect from "./useAccessLevelEffect";
 
-const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
+const AccessLevelModal = ({
+  show,
+  onClose,
+  onAccessLevelSubmit,
+  selectedPosition,
+  updateAccessLevels,
+}) => {
   const [checkedState, setCheckedState] = useState({
     currentAffairs: false,
     operationalRecords: false,
@@ -27,35 +34,32 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
     inspections: false,
     securityOps: false,
   });
+  const [disabledState, setDisabledState] = useState({});
+
+  // استفاده از useAccessLevelEffect برای تنظیم وضعیت چک‌باکس‌ها
+  useAccessLevelEffect(selectedPosition, setCheckedState, setDisabledState);
+
+  // بررسی و فراخوانی تابع updateAccessLevels اگر موجود باشد
+  useEffect(() => {
+    if (typeof updateAccessLevels === "function") {
+      updateAccessLevels(checkedState);
+    }
+  }, [checkedState, updateAccessLevels]);
 
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
-  const handleCheckboxChange = (checkboxName, isChecked) => {
-    setSelectedCheckboxes((prevSelected) => {
-      if (isChecked) {
-        return [...prevSelected, checkboxName];
-      } else {
-        return prevSelected.filter((item) => item !== checkboxName);
-      }
+  // تابع برای به‌روزرسانی وضعیت چک‌باکس‌ها
+  const handleCheckboxChange = (key) => {
+    setCheckedState((prevState) => {
+      const newState = { ...prevState, [key]: !prevState[key] };
+      console.log("Checkbox States after change:", newState); // نمایش مقادیر در کنسول پس از تغییر
+      return newState;
     });
   };
 
-  // تابع برای جمع‌آوری وضعیت تمام چک‌باکس‌ها
-  //   const gatherAllCheckBoxes = () => {
-  //     const allCheckBoxes = Object.entries(checkedState).map(([key, value]) => ({
-  //       name: key,
-  //       checked: value,
-  //     }));
-  //     console.log("All Checkboxes:", allCheckBoxes);
-  //   };
-
-  //     // تابع برای بروزرسانی وضعیت چک‌باکس‌ها
-  // const handleCheckboxChange = (name, value) => {
-  //   setCheckedState((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
+  const handleSubmit = () => {
+    onAccessLevelSubmit(checkedState);
+  };
 
   const handleSave = () => {
     const values = Object.entries(checkedState)
@@ -85,6 +89,8 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
               <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <AccessLevelSection
                   checkedState={checkedState}
+                  disabledState={disabledState}
+                  onCheckboxChange={handleCheckboxChange}
                   setCheckedState={setCheckedState}
                   sectionKey="currentAffairs"
                   sectionLabel="امور جاری"
@@ -94,14 +100,17 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                       label: "قراردادهای بهره‌برداری",
                       childCheckboxes: [
                         {
-                          key: "firstSet",
+                          key: "firstPumpStationGroup",
                           label: "مجموعه اول ایستگاه‌های پمپاژ",
                         },
                         {
                           key: "secondSet",
                           label: "مجموعه دوم ایستگاه‌های پمپاژ",
                         },
-                        { key: "irrigationNetwork", label: "شبکه‌های آبیاری" },
+                        {
+                          key: "irrigationNetwork",
+                          label: "شبکه‌های آبیاری",
+                        },
                       ],
                     },
                     {
@@ -109,7 +118,7 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                       label: "درخواست آب",
                       childCheckboxes: [
                         { key: "irrigationCalendar", label: "تقویم آبیاری" },
-                        { key: "damRequest", label: "درخواست از سد" },
+                        { key: "requestFromDam", label: "درخواست از سد" },
                         { key: "channelRequest", label: "درخواست از سامانه" },
                         {
                           key: "pumpRequest",
@@ -126,7 +135,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                           key: "channelValve",
                           label: "مانور دریچه‌ها و شیرآلات سامانه و مخازن",
                         },
-                        { key: "waterLevel", label: "رقوم سطح آب نقاط تحویل" },
+                        {
+                          key: "waterLevel",
+                          label: "رقوم سطح آب نقاط تحویل",
+                        },
                         {
                           key: "gravityFlowmeter",
                           label: "رقوم فلومتر نقاط تحویل ثقلی",
@@ -181,7 +193,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                       key: "security",
                       label: "حراست",
                       childCheckboxes: [
-                        { key: "shiftSchedule", label: "برنامه شیفت نگهبانان" },
+                        {
+                          key: "shiftSchedule",
+                          label: "برنامه شیفت نگهبانان",
+                        },
                         { key: "visitReport", label: "گزارش بازدید" },
                       ],
                     },
@@ -218,7 +233,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                       ],
                     },
                     { key: "circulars", label: "بخشنامه‌ها" },
-                    { key: "standards", label: "استانداردها و دستورالعمل‌ها" },
+                    {
+                      key: "standards",
+                      label: "استانداردها و دستورالعمل‌ها",
+                    },
                     { key: "users", label: "کاربران" },
                     // سایر چک‌باکس‌ها...
                   ]}
@@ -227,12 +245,14 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
               <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <AccessLevelSection
                   checkedState={checkedState}
+                  disabledState={disabledState}
+                  onCheckboxChange={handleCheckboxChange}
                   setCheckedState={setCheckedState}
                   sectionKey="operationalRecords"
                   sectionLabel="سوابق بهره‌برداری"
                   parentCheckboxes={[
                     {
-                      key: "accounting",
+                      key: "waterAccounting",
                       label: "حسابداری آب",
                       childCheckboxes: [
                         { key: "damBalance", label: "بیلان سد" },
@@ -245,7 +265,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                         { key: "waterDelivery", label: "تحویل آب" },
                         { key: "rain", label: "بارندگی" },
                         { key: "dashboard", label: "داشبورد" },
-                        { key: "deliveryMinutes", label: "صورتجلسات تحویل آب" },
+                        {
+                          key: "deliveryMinutes",
+                          label: "صورتجلسات تحویل آب",
+                        },
                       ],
                     },
                     {
@@ -304,6 +327,8 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
               <div className="col-12 col-md-6 col-lg-3 border-start border-bottom mb-3">
                 <AccessLevelSection
                   checkedState={checkedState}
+                  disabledState={disabledState}
+                  onCheckboxChange={handleCheckboxChange}
                   setCheckedState={setCheckedState}
                   sectionKey="performanceRecords"
                   sectionLabel="سوابق اجرا"
@@ -350,6 +375,8 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
               <div className="col-12 col-md-6 col-lg-3 mb-3 border-bottom">
                 <AccessLevelSection
                   checkedState={checkedState}
+                  disabledState={disabledState}
+                  onCheckboxChange={handleCheckboxChange}
                   setCheckedState={setCheckedState}
                   sectionKey="studiesRecords"
                   sectionLabel="سوابق مطالعات"
@@ -364,7 +391,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                         { key: "environment", label: "محیط زیست" },
                         { key: "sociology", label: "جامعه شناسی" },
                         { key: "agriculture", label: "کشاورزی و دامپروری" },
-                        { key: "irrigationDrainage", label: "آبیاری و زهکشی" },
+                        {
+                          key: "irrigationDrainage",
+                          label: "آبیاری و زهکشی",
+                        },
                         { key: "economy", label: "اقتصاد طرح" },
                       ],
                     },
@@ -375,7 +405,10 @@ const AccessLevelModal = ({ show, onClose, onAccessLevelSubmit }) => {
                         { key: "dam", label: "سد" },
                         { key: "channel", label: "سامانه" },
                         { key: "pumping", label: "ایستگاه‌های پمپاژ" },
-                        { key: "irrigationNetworks", label: "شبکه‌های آبیاری" },
+                        {
+                          key: "irrigationNetworks",
+                          label: "شبکه‌های آبیاری",
+                        },
                       ],
                     },
                   ]}
