@@ -20,7 +20,7 @@ const UsersdCurrent = ({ userData }) => {
 
   const tabs = [
     { 
-      label: "امور جاری/کاربران", 
+      label: "امور جاری/مدیریت مرورگر", 
       content: (
         <div className="d-flex justify-content-start">
           <button className="btn btn-primary mt-3" onClick={handleOpenModal}>

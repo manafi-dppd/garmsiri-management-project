@@ -26,11 +26,21 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [listSize, setListSize] = useState(4);
   const [accessLevels, setAccessLevels] = useState({});
-  const [selectedPosition, setSelectedPosition] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState(""); // ذخیره وضعیت انتخاب شده از لیست "سمت"
+  const [isAccessLevelModalOpen, setAccessLevelModalOpen] = useState(false);
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
 
   const today = new Date().toISOString().split("T")[0];
+
+  const handlePositionChange = (event) => {
+    setSelectedPosition(event.target.value);
+  };
+
+  const openAccessLevelModal = () => {
+    setAccessLevelModalOpen(true);
+    setShowAccessLevelModal(true); // باز کردن پنجره "سطح دسترسی"
+  };
 
   const handleChange = (e) => {
     const { name, value, type, selectedOptions, files } = e.target;
@@ -143,9 +153,9 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
   };
 
-  const updateAccessLevels = (levels) => {
-    console.log("Checkbox States:", levels);
-  };
+  // const updateAccessLevels = (levels) => {
+  //   console.log("Checkbox States:", levels);
+  // };
 
   return (
     <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
@@ -311,6 +321,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                           <option value="مسئول اداری">مسئول اداری</option>
                           <option value="مسئول حراست">مسئول حراست</option>
                           <option value="نگهبان سامانه">نگهبان سامانه</option>
+                          <option value="نگهبان شبکه">نگهبان شبکه</option>
                           <option value="نماینده حقوق">نماینده حقوقی</option>
                           <option value="انباردار">انباردار</option>
                           <option value="نماینده آب منطقه‌ای">
@@ -354,7 +365,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
                         type="button"
                         className="btn btn-secondary"
                         disabled={isAccessLevelButtonDisabled}
-                        onClick={() => setShowAccessLevelModal(true)}
+                        onClick={openAccessLevelModal}
                       >
                         ویرایش سطح دسترسی
                       </button>
@@ -488,12 +499,10 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       )}
       {showAccessLevelModal && (
         <AccessLevelModal
-        show={showAccessLevelModal}
-        onClose={() => setShowAccessLevelModal(false)}
-        onAccessLevelSubmit={handleAccessLevelSubmit}
-        selectedPosition={selectedPosition}
-        // ارسال تابع به AccessLevelModal
-        updateAccessLevels={updateAccessLevels}
+          show={showAccessLevelModal}
+          onClose={() => setShowAccessLevelModal(false)}
+          onAccessLevelSubmit={handleAccessLevelSubmit}
+          selectedPosition={selectedPosition} // انتقال وضعیت انتخاب شده
         />
       )}
     </div>

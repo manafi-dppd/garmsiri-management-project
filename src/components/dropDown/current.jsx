@@ -97,7 +97,7 @@ class Current extends Component {
             </li>
             <li>
               <a className="dropdown-item text-end" href="#" onClick={this.props.onUsersdCurrentClick}>
-                کاربران
+                مدیریت مرورگر
               </a>
             </li>
           </ul>

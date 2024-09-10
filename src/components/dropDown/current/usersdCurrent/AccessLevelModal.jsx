@@ -74,8 +74,8 @@ const AccessLevelModal = ({
     circulars: false,
     // استانداردها و دستورالعمل‌ها
     standards: false,
-    // کاربران
-    users: false,
+    // مدیریت مرورگر
+    browserManagement: false,
     // سوابق بهره‌برداری
     operationalRecords: false,
     // حسابداری آب
@@ -203,7 +203,7 @@ const AccessLevelModal = ({
       <div className="modal-dialog modal-xl">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">سطح دسترسی</h5>
+            <h5 className="modal-title">سطح دسترسی {selectedPosition && ` ${selectedPosition}`}</h5>
             <button
               type="button"
               className="btn-close"
@@ -364,7 +364,7 @@ const AccessLevelModal = ({
                       key: "standards",
                       label: "استانداردها و دستورالعمل‌ها",
                     },
-                    { key: "users", label: "کاربران" },
+                    { key: "browserManagement", label: "مدیریت مرورگر" },
                     // سایر چک‌باکس‌ها...
                   ]}
                 />
