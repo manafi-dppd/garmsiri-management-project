@@ -3,6 +3,9 @@ import TabComponent from "../../tabComponent";
 import InvitationModal from "./usersdCurrent/invitationModal";
 
 const UsersdCurrent = ({ userData }) => {
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [tableRows, setTableRows] = useState([]); // State to manage table rows
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -14,6 +17,18 @@ const UsersdCurrent = ({ userData }) => {
   };
 
   const handleFormSubmit = (formData) => {
+    // Extract lastName and position (first selected position)
+    const { lastName, position } = formData;
+    const selectedPosition = position[0] || "";
+
+    // Add new row to the table
+    setTableRows((prevRows) => [
+      ...prevRows,
+      { lastName, selectedPosition },
+    ]);
+
+    // Close the InvitationModal
+    setShowInvitationModal(false);
     console.log("Form Data:", formData);
     setIsModalOpen(false);
   };
@@ -43,6 +58,27 @@ const UsersdCurrent = ({ userData }) => {
         onClose={handleCloseModal} 
         onSubmit={handleFormSubmit} 
       />
+      {/* Render the table below the "Send Invitation" button */}
+      <table className="table mt-4">
+        <thead>
+          <tr>
+            <th>نام خانوادگی</th>
+            <th>سمت</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableRows.map((row, index) => (
+            <tr key={index}>
+              <td>{row.lastName}</td>
+              <td>
+                <button className="btn btn-secondary">
+                  {row.selectedPosition}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 };
