@@ -44,7 +44,13 @@ class Header extends Component {
     activeComponent: null,
     userData: null,
   };
+  static finalAccessLevel = {};
 
+  static setFinalAccessLevel(newAccessLevel) {
+    Header.finalAccessLevel = newAccessLevel;
+    console.log("Final Access Level in Header:", newAccessLevel);
+  }
+  
   componentDidMount() {
     document.querySelectorAll(".dropdown-submenu > a").forEach((element) => {
       const nextEl = element.nextElementSibling;
@@ -85,6 +91,10 @@ class Header extends Component {
   };
 
   render() {
+
+    // چک کردن مقدار operationalRecords
+    const shouldShowRecords = Header.finalAccessLevel.operationalRecords !== false;
+
     const currentHandlers = {
       onContractCurrentClick: () => this.handleToggle("contractCurrent"),
       onRequestCurrentClick: () => this.handleToggle("requestCurrent"),
@@ -207,7 +217,7 @@ class Header extends Component {
             role="tablist"
           >
             <Current className="p-2" {...currentHandlers} />
-            <Records className="p-2" {...recordsHandlers} />
+            {shouldShowRecords && <Records className="p-2" {...recordsHandlers} />}
             <Construction className="p-2" {...constructionHandlers} />
             <Studies className="p-2" {...StudiesHandlers} />
             <Specifications className="p-2" />

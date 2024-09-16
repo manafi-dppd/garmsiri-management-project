@@ -11,6 +11,7 @@ const AccessLevelSection = ({
   onCheckboxChange,
   parentCheckboxes = [],
 }) => {
+  // Render checkboxes for parent items and their children
   const renderCheckboxes = (keys) => {
     return keys.map((key) => (
       <div className="form-check" key={key}>
@@ -18,8 +19,8 @@ const AccessLevelSection = ({
           className="form-check-input"
           type="checkbox"
           id={key}
-          checked={checkedState[key]}
-          onChange={() => onCheckboxChange(key)}
+          checked={checkedState[key] || false}
+          onChange={(e) => onCheckboxChange(key, e.target.checked)} // تغییر چکباکس با فراخوانی تابع onCheckboxChange
         />
         <label className="form-check-label" htmlFor={key}>
           {key}
@@ -27,6 +28,8 @@ const AccessLevelSection = ({
       </div>
     ));
   };
+
+  // Function to handle parent checkbox change and update child states
   const handleParentCheck = () => {
     const newState = !checkedState[sectionKey];
     // Set all checkboxes based on the new state
@@ -47,32 +50,33 @@ const AccessLevelSection = ({
       ...updatedState,
     }));
   };
-
+  // Expand checkboxes when component loads
   React.useEffect(() => {
     expandCheckboxes(); // زمانی که کامپوننت بارگذاری می‌شود، چک‌باکس‌ها را باز کن
   }, []);
-    const expandCheckboxes = () => {
-  setCheckedState((prevState) => {
-    const newState = { ...prevState };
+  // Expand child checkboxes if parent is checked
+  const expandCheckboxes = () => {
+    setCheckedState((prevState) => {
+      const newState = { ...prevState };
 
-    parentCheckboxes.forEach(({ key, childCheckboxes }) => {
-      // اگر یک چک‌باکس فعال است، والدین آن و زیرمجموعه‌هایش را باز کن
-      if (prevState[key]) {
-        newState[sectionKey] = true; // اطمینان حاصل شود که بخش اصلی نیز باز است
-        newState[key] = true; // اطمینان حاصل شود که والدین باز هستند
+      parentCheckboxes.forEach(({ key, childCheckboxes }) => {
+        // اگر یک چک‌باکس فعال است، والدین آن و زیرمجموعه‌هایش را باز کن
+        if (prevState[key]) {
+          newState[sectionKey] = true; // اطمینان حاصل شود که بخش اصلی نیز باز است
+          newState[key] = true; // اطمینان حاصل شود که والدین باز هستند
 
-        // برای باز کردن زیرمجموعه‌ها
-        if (childCheckboxes) {
-          childCheckboxes.forEach(({ key: childKey }) => {
-            newState[childKey] = true;
-          });
+          // برای باز کردن زیرمجموعه‌ها
+          if (childCheckboxes) {
+            childCheckboxes.forEach(({ key: childKey }) => {
+              newState[childKey] = true;
+            });
+          }
         }
-      }
-    });
+      });
 
-    return newState;
-  });
-};
+      return newState;
+    });
+  };
   // Check and update the parent checkbox status based on its children
   const checkParentStatus = () => {
     const isChecked = parentCheckboxes.some(
@@ -88,32 +92,6 @@ const AccessLevelSection = ({
     }));
   };
 
-  // Check if all children are unchecked and hide them
-  const hideChildrenIfAllUnchecked = () => {
-    const areAllChildrenUnchecked = parentCheckboxes.every(
-      ({ key, childCheckboxes }) =>
-        !checkedState[key] &&
-        (!childCheckboxes ||
-          childCheckboxes.every(({ key: childKey }) => !checkedState[childKey]))
-    );
-
-    if (areAllChildrenUnchecked && checkedState[sectionKey] !== false) {
-      setCheckedState((prevState) => ({
-        ...prevState,
-        [sectionKey]: false,
-      }));
-    }
-  };
-
-
-  // Call the hideChildrenIfAllUnchecked function on any change
-  // React.useEffect(() => {
-  //   hideChildrenIfAllUnchecked();
-  // }, [checkedState]);
-
-
-
-
   return (
     <div className="p-3">
       <div className="form-check d-flex justify-content-start align-items-center">
@@ -121,7 +99,7 @@ const AccessLevelSection = ({
           className="form-check-input mx-2"
           type="checkbox"
           id={sectionKey}
-          checked={checkedState[sectionKey]}
+          checked={checkedState[sectionKey] || false}
           onChange={handleParentCheck}
         />
         <label className="form-check-label me-2" htmlFor={sectionKey}>

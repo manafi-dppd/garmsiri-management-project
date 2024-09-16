@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import AccessLevelModal from "./AccessLevelModal"; // Import the AccessLevelModal component
 import DatePickerModal from "./DatePickerModal"; // Import the DatePickerModal component
+import useAccessLevelEffect from "./useAccessLevelEffect";
+import Header from "../../../header";
 
-const InvitationModal = ({ show, onClose, onSubmit }) => {
+const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,6 +21,11 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     confirmer: "",
   });
 
+  const [checkedState, setCheckedState] = useState({});
+  const [disabledState, setDisabledState] = useState({});
+
+  // فراخوانی useAccessLevelEffect
+  useAccessLevelEffect(formData.position, setCheckedState, setDisabledState);
   const [isAccessLevelButtonDisabled, setIsAccessLevelButtonDisabled] =
     useState(true);
 
@@ -30,12 +37,8 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   const [isAccessLevelModalOpen, setAccessLevelModalOpen] = useState(false);
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
   const [showAccessLevelModal, setShowAccessLevelModal] = useState(false); // State to control the AccessLevelModal
-
+  const [finalAccessLevel, setFinalAccessLevel] = useState({});
   const today = new Date().toISOString().split("T")[0];
-
-  const handlePositionChange = (event) => {
-    setSelectedPosition(event.target.value);
-  };
 
   const openAccessLevelModal = () => {
     setAccessLevelModalOpen(true);
@@ -43,6 +46,15 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   };
 
   const handleChange = (e) => {
+    const position = e.target.value;
+    setSelectedPosition(position); // به‌روزرسانی selectedPosition با تغییر انتخاب
+    Header.setFinalAccessLevel(checkedState); // ارسال checkedState به کامپوننت Header
+    console.log(
+      "Access Levels from InvitationModal (on position change):",
+      checkedState
+    );
+    setFinalAccessLevel(checkedState);
+    setSelectedPosition(e.target.value);
     const { name, value, type, selectedOptions, files } = e.target;
     if (type === "select-multiple") {
       const options = Array.from(selectedOptions).map((option) => option.value);
@@ -55,8 +67,8 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       setSelectedPosition(options[0]);
 
       // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
-    const isAdminSelected = options.includes("ادمین وبسایت");
-    setIsAccessLevelButtonDisabled(isAdminSelected);
+      const isAdminSelected = options.includes("ادمین وبسایت");
+      setIsAccessLevelButtonDisabled(isAdminSelected);
       const specialOptions = [
         "نماینده آب منطقه‌ای",
         "نماینده آببران ذهاب جنوبی",
@@ -101,7 +113,7 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
       confirmer,
     } = formData;
 
-    const basicValid = lastName && phoneNumber && gender && position.length > 0;
+    const basicValid = lastName && phoneNumber && position.length > 0;
 
     const specialOptionsSelected = [
       "نماینده آب منطقه‌ای",
@@ -130,7 +142,6 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
   };
 
   const modalClass = showAdditionalInputs ? "modal-lg" : "modal-md";
-  
 
   const toggleAccessLevelModal = () => {
     setShowAccessLevelModal((prevState) => !prevState);
@@ -151,6 +162,8 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
     setAccessLevels(updatedAccessLevels);
     // setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
     setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
+    onAccessLevelsUpdate(updatedAccessLevels); // Call the function to send data to UsersdCurrent
+    console.log(updatedAccessLevels);
   };
 
   // const updateAccessLevels = (levels) => {
@@ -173,11 +186,10 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
           <div className="modal-body">
             <div className="container-fluid">
               <div className="row">
-                
                 <div
                   className={`col-12 ${
                     showAdditionalInputs ? "col-md-6" : "col-md-12"
-                  }`}                  
+                  }`}
                 >
                   <form onSubmit={handleSubmit} className="text-end">
                     <div className="mb-3">
@@ -503,6 +515,10 @@ const InvitationModal = ({ show, onClose, onSubmit }) => {
           onClose={() => setShowAccessLevelModal(false)}
           onAccessLevelSubmit={handleAccessLevelSubmit}
           selectedPosition={selectedPosition} // انتقال وضعیت انتخاب شده
+          updateAccessLevels={(checkedState) => {
+            setFinalAccessLevel(checkedState);
+            console.log("Updated Access Levels:", checkedState);
+          }}
         />
       )}
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccessLevelSection from "./AccessLevelModal/AccessLevelSection";
 import useAccessLevelEffect from "./useAccessLevelEffect";
+import Header from "../../../header";
 
 const AccessLevelModal = ({
   show,
@@ -176,16 +177,20 @@ const AccessLevelModal = ({
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   // تابع برای به‌روزرسانی وضعیت چک‌باکس‌ها
-  const handleCheckboxChange = (key) => {
-    setCheckedState((prevState) => {
-      const newState = { ...prevState, [key]: !prevState[key] };
-      console.log("Checkbox States after change:", newState); // نمایش مقادیر در کنسول پس از تغییر
-      return newState;
-    });
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setCheckedState((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }));
   };
 
   const handleSubmit = () => {
-    onAccessLevelSubmit(checkedState);
+    onAccessLevelSubmit({
+      position: selectedPosition, // pass the selected position
+      checkedState: checkedState, // pass the checkbox states
+    });
+    onClose();
   };
 
   const handleSave = () => {
@@ -194,8 +199,15 @@ const AccessLevelModal = ({
       .map(([key]) => key);
 
     console.log("Current Checkbox States:", checkedState);
-    onClose();
+    
     onAccessLevelSubmit(checkedState);
+
+    // Update Header's finalAccessLevel
+    Header.setFinalAccessLevel(checkedState);
+
+    // Log the finalAccessLevel
+    console.log("Updated Final Access Level in Header:", checkedState);
+    onClose();
   };
 
   return (
