@@ -290,12 +290,12 @@ const InvitationModal = ({
                             type="radio"
                             name="gender"
                             id="male"
-                            value="male"
-                            checked={formData.gender === "male"}
+                            value="مرد"
+                            checked={formData.gender === "مرد"}
                             onChange={handleChange}
                             required
                           />
-                          <label className="form-check-label" htmlFor="male">
+                          <label className="form-check-label" htmlFor="مرد">
                             مرد
                           </label>
                         </div>
@@ -305,12 +305,12 @@ const InvitationModal = ({
                             type="radio"
                             name="gender"
                             id="female"
-                            value="female"
-                            checked={formData.gender === "female"}
+                            value="زن"
+                            checked={formData.gender === "زن"}
                             onChange={handleChange}
                             required
                           />
-                          <label className="form-check-label" htmlFor="female">
+                          <label className="form-check-label" htmlFor="زن">
                             زن
                           </label>
                         </div>
