@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Program",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**/*.js",
+        "**/react-dom.development.js",
+        "**/react.development.js",
+        "**/scheduler.development.js",
+        "**/react-jsx-dev-runtime.development.js",
+        "**/react-refresh-runtime.development.js",
+        "**/compat get default export",
+        "**/VM8",
+        "**/VM7",
+        "**/event-handler.js",
+        "**/factoryWithTypeCheckers.js"
+      ]
+    }
+  ]
+}

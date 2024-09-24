@@ -5,8 +5,15 @@ import AccessLevelModal from "./AccessLevelModal"; // Import the AccessLevelModa
 import DatePickerModal from "./DatePickerModal"; // Import the DatePickerModal component
 import useAccessLevelEffect from "./useAccessLevelEffect";
 import Header from "../../../header";
+import { getAccessLevelsForPosition } from "./useAccessLevelEffect"; // مسیر درست فایل را جایگزین کنید
 
-const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
+const InvitationModal = ({
+  show,
+  onClose,
+  onSubmit,
+  onAccessLevelsUpdate,
+  onAccessLevelSubmit,
+}) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -20,7 +27,6 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
     letterDate: "",
     confirmer: "",
   });
-
   const [checkedState, setCheckedState] = useState({});
   const [disabledState, setDisabledState] = useState({});
 
@@ -45,30 +51,24 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
     setShowAccessLevelModal(true); // باز کردن پنجره "سطح دسترسی"
   };
 
+  const [newAccessLevels, setNewAccessLevels] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(""); // ذخیره مقدار انتخاب‌شده در اینجا
+
   const handleChange = (e) => {
-    const position = e.target.value;
-    setSelectedPosition(position); // به‌روزرسانی selectedPosition با تغییر انتخاب
-    Header.setFinalAccessLevel(checkedState); // ارسال checkedState به کامپوننت Header
-    console.log(
-      "Access Levels from InvitationModal (on position change):",
-      checkedState
-    );
-    setFinalAccessLevel(checkedState);
-    setSelectedPosition(e.target.value);
     const { name, value, type, selectedOptions, files } = e.target;
+
     if (type === "select-multiple") {
+      setAccessLevels(e);
       const options = Array.from(selectedOptions).map((option) => option.value);
       setFormData((prevData) => ({
         ...prevData,
-        [name]: options,
+        [name]: options, // به‌روزرسانی صحیح position برای multiple select
       }));
-      // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
-      setIsAccessLevelButtonDisabled(false);
-      setSelectedPosition(options[0]);
 
-      // فعال کردن دکمه ویرایش سطح دسترسی زمانی که انتخاب سمت تغییر می‌کند
+      setIsAccessLevelButtonDisabled(false);
       const isAdminSelected = options.includes("ادمین وبسایت");
       setIsAccessLevelButtonDisabled(isAdminSelected);
+
       const specialOptions = [
         "نماینده آب منطقه‌ای",
         "نماینده آببران ذهاب جنوبی",
@@ -83,6 +83,17 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
       );
       setShowFileInput(hasSpecialOption);
       setShowAdditionalInputs(hasSpecialOption);
+
+      // بروز رسانی selectedPosition
+      setSelectedPosition(options[0]);
+
+      // بروز رسانی سطح دسترسی‌ها
+      setSelectedOption(e); // ذخیره گزینه انتخابی
+      const newAccessLevels = getAccessLevelsForPosition(options[0]);
+      setCheckedState(newAccessLevels);
+      
+      setNewAccessLevels(newAccessLevels); // ذخیره access levels در state
+      console.log("Access Levels in handleChange:", newAccessLevels);
     } else if (type === "file") {
       setFormData((prevData) => ({
         ...prevData,
@@ -95,6 +106,23 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
       }));
     }
   };
+   // Inside InvitationModal component
+   const handleAccessLevelSubmit = (checkedState) => {
+    setCheckedState(checkedState); // Update the access level state
+    console.log("Updated Access Levels:", checkedState);
+    // You can trigger additional logic here based on the updated access levels
+  };
+  useEffect(() => {
+    if (checkedState && Object.keys(checkedState).length > 0) {
+      console.log(
+        "Access Levels from InvitationModal (after checkedState update):",
+        checkedState
+      );
+
+      // ارسال checkedState به Header بعد از به‌روزرسانی
+      setCheckedState(checkedState);
+    }
+  }, [checkedState]); // هرگاه checkedState تغییر کرد، این اثر اجرا می‌شود.
 
   const handleSizeChange = (e) => {
     setListSize(Number(e.target.value));
@@ -134,10 +162,19 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
     return basicValid;
   };
 
+
   const handleSubmit = (e) => {
+    // Optionally close the modal or perform other actions
     e.preventDefault();
     if (isFormValid()) {
       onSubmit(formData);
+    }
+    console.log("Selected Access Levels: ", accessLevels);
+    if (newAccessLevels) {
+      Header.setFinalAccessLevel(checkedState); // پاس دادن به Header
+      console.log("Access Levels submitted to Header:", checkedState);
+    } else {
+      console.error("No access levels set. Please select an option first.");
     }
   };
 
@@ -158,13 +195,7 @@ const InvitationModal = ({ show, onClose, onSubmit, onAccessLevelsUpdate }) => {
     }));
   };
 
-  const handleAccessLevelSubmit = (updatedAccessLevels) => {
-    setAccessLevels(updatedAccessLevels);
-    // setIsAccessLevelButtonDisabled(true); // غیرفعال کردن دکمه پس از ثبت تغییرات سطح دسترسی
-    setShowAccessLevelModal(false); // بستن پنجره سطح دسترسی
-    onAccessLevelsUpdate(updatedAccessLevels); // Call the function to send data to UsersdCurrent
-    console.log(updatedAccessLevels);
-  };
+ 
 
   // const updateAccessLevels = (levels) => {
   //   console.log("Checkbox States:", levels);

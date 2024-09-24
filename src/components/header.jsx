@@ -43,6 +43,17 @@ class Header extends Component {
   state = {
     activeComponent: null,
     userData: null,
+    accessLevels: {}, // This will hold the filtered menu visibility state
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      accessLevels: {}, // This will hold the filtered menu visibility state
+    };
+  }
+  handleAccessLevelUpdate = (newAccessLevels) => {
+    // به‌روزرسانی سطوح دسترسی
+    this.setState({ accessLevels: newAccessLevels });
   };
   static finalAccessLevel = {};
 
@@ -92,8 +103,14 @@ class Header extends Component {
 
   render() {
 
-    // چک کردن مقدار operationalRecords
-    const shouldShowRecords = Header.finalAccessLevel.operationalRecords !== false;
+    // استفاده از مقادیر دسترسی‌ها برای فیلتر کردن منوها
+    const { accessLevels } = this.state;
+    // Inside Header's render method:
+    const { operationalRecords, constructionAccess } = Header.finalAccessLevel;
+    // استفاده از مقادیر checkedState برای فیلتر کردن نمایش منوها
+    const shouldShowRecords = accessLevels.operationalRecords !== false;    
+    const shouldShowConstruction = accessLevels.constructionAccess !== false;
+    const shouldShowStudies = accessLevels.studiesAccess !== false;
 
     const currentHandlers = {
       onContractCurrentClick: () => this.handleToggle("contractCurrent"),
@@ -111,7 +128,8 @@ class Header extends Component {
       onStandardCurrentClick: () => this.handleToggle("standardCurrent"),
       onUsersdCurrentClick: () => this.handleToggle("usersdCurrent"),
     };
-    const recordsHandlers = {
+    const recordsHandlers = 
+      shouldShowRecords ? {
       onAccountingRecordsClick: () => this.handleToggle("accountingRecords"),
       onRepairsServiceClick: () => this.handleToggle("repairsService"),
       onServiceRecordsClick: () => this.handleToggle("serviceRecords"),
@@ -121,8 +139,8 @@ class Header extends Component {
       onLetterRecordsClick: () => this.handleToggle("letterRecords"),
       onReportsRecordsClick: () => this.handleToggle("reportsRecords"),
       onVisitesRecordsClick: () => this.handleToggle("visitesRecords"),
-    };
-    const constructionHandlers = {
+    } : {};
+    const constructionHandlers = shouldShowConstruction ? {
       onDamConstructionClick: () => this.handleToggle("damConstruction"),
       onChannelConstructionClick: () =>
         this.handleToggle("channelConstruction"),
@@ -130,11 +148,11 @@ class Header extends Component {
         this.handleToggle("pumpingConstruction"),
       onNetworkConstructionClick: () =>
         this.handleToggle("networkConstruction"),
-    };
-    const StudiesHandlers = {
+    } : {};
+    const StudiesHandlers = shouldShowStudies ? {
       onFirstStudiesClick: () => this.handleToggle("firstStudies"),
       onSecondStudiesClick: () => this.handleToggle("secondStudies"),
-    };
+    } : {};
     const { activeComponent, userData } = this.state;
     const componentMap = {
       usersdCurrent: () => <UsersdCurrent userData={userData} />,
@@ -217,9 +235,10 @@ class Header extends Component {
             role="tablist"
           >
             <Current className="p-2" {...currentHandlers} />
+            {constructionAccess && <Construction className="p-2" {...constructionHandlers} />}
             {shouldShowRecords && <Records className="p-2" {...recordsHandlers} />}
-            <Construction className="p-2" {...constructionHandlers} />
-            <Studies className="p-2" {...StudiesHandlers} />
+            {shouldShowConstruction && <Construction className="p-2" {...constructionHandlers} />}
+            {shouldShowStudies && <Studies className="p-2" {...StudiesHandlers} />}
             <Specifications className="p-2" />
           </div>
         </div>

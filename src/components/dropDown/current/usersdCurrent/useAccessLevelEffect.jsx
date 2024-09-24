@@ -1,13 +1,9 @@
 // useAccessLevelEffect.js
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
-const useAccessLevelEffect = (
-  selectedPosition,
-  setCheckedState,
-  setDisabledState
-) => {
-  useEffect(() => {
+
+  export const getAccessLevelsForPosition = (selectedPosition) => {
     // تعریف آرایه با مقادیر پیش‌فرض false
     const initialState = {
       // امور جاری
@@ -164,7 +160,6 @@ const useAccessLevelEffect = (
     // کپی از وضعیت اولیه
     const newState = { ...initialState };
     const disabledState = { ...initialState }; // وضعیت غیرفعال بودن
-
     switch (selectedPosition) {
       case "ادمین وبسایت":
         Object.keys(newState).forEach((key) => (newState[key] = true));
@@ -892,12 +887,28 @@ const useAccessLevelEffect = (
       default:
         break;
     }
+    
+    // برگرداندن وضعیت‌های جدید و غیرفعال بودن‌ها
+  return { newState };
+  };
+  
+  // هوک useAccessLevelEffect برای استفاده از تابع getAccessLevelsForPosition
+  const useAccessLevelEffect = (
+  selectedPosition,
+  setCheckedState,
+  setDisabledState
+) => {
+  useEffect(() => {
+    if (selectedPosition) {
+      const { newState, disabledState } = getAccessLevelsForPosition(selectedPosition);
+      
+      // به‌روزرسانی وضعیت با مقادیر جدید
+      setCheckedState(newState);
+      setDisabledState(disabledState);
 
-    // به‌روزرسانی وضعیت با مقادیر جدید
-    setCheckedState(newState);
-    setDisabledState(disabledState);
-    console.log("Checkbox States:", newState); // نمایش مقادیر در کنسول
-  }, [selectedPosition, setCheckedState]);
+      console.log("Checkbox States:", newState); // نمایش مقادیر در کنسول
+    }
+  }, [selectedPosition, setCheckedState, setDisabledState]);
 };
 
 export default useAccessLevelEffect;

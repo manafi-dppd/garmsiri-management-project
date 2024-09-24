@@ -5,6 +5,13 @@ import "../style.css";
 class Construction extends Component {
   state = {};
   render() {
+    const {
+      onDamConstructionClick,
+      onChannelConstructionClick,
+      onPumpingConstructionClick,
+      onNetworkConstructionClick,
+      accessLevels,
+    } = this.props;
     return (
       <>
         <div className="dropdown">
@@ -25,7 +32,7 @@ class Construction extends Component {
               <a
                 className="dropdown-item text-end"
                 href="#"
-                onClick={this.props.onDamConstructionClick}
+                onClick={onDamConstructionClick}
               >
                 سد
               </a>
@@ -34,7 +41,7 @@ class Construction extends Component {
               <a
                 className="dropdown-item text-end"
                 href="#"
-                onClick={this.props.onChannelConstructionClick}
+                onClick={onChannelConstructionClick}
               >
                 سامانه
               </a>
@@ -43,7 +50,7 @@ class Construction extends Component {
               <a
                 className="dropdown-item text-end"
                 href="#"
-                onClick={this.props.onPumpingConstructionClick}
+                onClick={onChannelConstructionClick}
               >
                 ایستگاه‌های پمپاژ
               </a>
@@ -52,7 +59,7 @@ class Construction extends Component {
               <a
                 className="dropdown-item text-end"
                 href="#"
-                onClick={this.props.onNetworkConstructionClick}
+                onClick={onNetworkConstructionClick}
               >
                 شبکه‌های آبیاری
               </a>

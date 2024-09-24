@@ -7,13 +7,40 @@ import InvitationModal from "./components/dropDown/current/usersdCurrent/invitat
 import AccessLevelModal from "./components/dropDown/current/usersdCurrent/AccessLevelModal";
 
 class App extends Component {
-  state = {};
+  state = {
+    showInvitationModal: false, // کنترل نمایش دعوتنامه
+    accessLevels: {}, // ذخیره سطح دسترسی‌ها
+  };
+
+  handleInvitationSubmit = (accessLevels) => {
+    // تابعی برای زمانی که دعوتنامه ارسال شد
+    this.setState({ accessLevels });
+    // پس از ارسال دعوتنامه، می‌توانیم پنجره مودال را ببندیم
+    this.toggleInvitationModal();
+  };
+
+  toggleInvitationModal = () => {
+    // برای باز یا بسته کردن پنجره دعوتنامه
+    this.setState((prevState) => ({
+      showInvitationModal: !prevState.showInvitationModal,
+    }));
+  };
+
   render() {
+    const { showInvitationModal, accessLevels } = this.state;
+
     return (
       <Router>
-        <Header />
+        <Header accessLevels={accessLevels} />
+        {/* <button onClick={this.toggleInvitationModal}>نمایش دعوتنامه</button> */}
+        {showInvitationModal && (
+          <InvitationModal
+            show={showInvitationModal}
+            onClose={this.toggleInvitationModal}
+            onSubmit={this.handleInvitationSubmit} // ارسال سطح دسترسی‌ها پس از ارسال دعوتنامه
+          />
+        )}
         <Routes>
-          <Route path="/invitation" element={<InvitationModal />} />
           <Route path="/access" element={<AccessLevelModal />} />
         </Routes>
       </Router>

@@ -9,7 +9,15 @@ import Studies from "./studies";
 import Specifications from "./specifications";
 
 class Header extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      accessLevels: {}, // اینجا دسترسی‌های کاربر ذخیره می‌شود
+    };
+  }
+  handleAccessLevelUpdate = (newAccessLevels) => {
+    this.setState({ accessLevels: newAccessLevels });
+  };
 
   componentDidMount() {
     document.querySelectorAll(".dropdown-submenu > a").forEach((element) => {
@@ -40,6 +48,17 @@ class Header extends Component {
   }
 
   render() {
+    const { accessLevels } = this.state;
+
+    // استفاده از مقادیر دسترسی برای نشان دادن یا پنهان کردن منوهای اصلی و فرعی
+    const shouldShowRecords = accessLevels.operationalRecords;
+    const constructionAccess = accessLevels.constructionAccess;
+    const shouldShowStudies = accessLevels.studiesAccess;
+
+    const currentHandlers = { /* هندلرهای مربوط به Current */ };
+    const recordsHandlers = { /* هندلرهای مربوط به Records */ };
+    const constructionHandlers = { /* هندلرهای مربوط به Construction */ };
+    const StudiesHandlers = { /* هندلرهای مربوط به Studies */ };
     return (
       <>
         <div className="row Header pb-0" role="banner">
@@ -83,10 +102,10 @@ class Header extends Component {
             className="nav nav-pills container-fluid d-flex justify-content-around flex-row-reverse"
             role="tablist"
           >
-            <Current className="p-2" />
-            <Records className="p-2" />
-            <Construction className="p-2" />
-            <Studies className="p-2" />
+            <Current className="p-2" {...currentHandlers} />
+            {constructionAccess && <Construction className="p-2" {...constructionHandlers} />}
+            {shouldShowRecords && <Records className="p-2" {...recordsHandlers} />}
+            {shouldShowStudies && <Studies className="p-2" {...StudiesHandlers} />}
             <Specifications className="p-2" />
           </div>
         </div>
@@ -179,6 +198,11 @@ class Header extends Component {
             </div>
           </div>
         </div>
+        {/* اگر کامپوننت خاصی فعال باشد، نمایش داده شود */}
+        {this.state.activeComponent && <this.state.activeComponent />}
+
+        {/* فراخوانی InvitationModal و پاس دادن تابع handleAccessLevelUpdate */}
+        <InvitationModal onAccessLevelSubmit={this.handleAccessLevelUpdate} />
       </>
     );
   }

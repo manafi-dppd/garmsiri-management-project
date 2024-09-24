@@ -1,162 +1,37 @@
-// InvitationModal.js
-
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
-import AccessLevelModal from "./AccessLevelModal";
-import DatePickerModal from "./DatePickerModal";
-
-const InvitationModal = ({ show, onClose, onSubmit }) => {
-  // وضعیت چک‌باکس‌ها برای مدیریت دسترسی
-  const [checkboxStates, setCheckboxStates] = useState({});
-  
-  // مدیریت داده‌های فرم
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    endDate: "",
-    position: [],
-    gender: "",
-    file: null,
-    issuer: "",
-    letterNumber: "",
-    letterDate: "",
-    confirmer: "",
-  });
-
-  const [isAccessLevelButtonDisabled, setIsAccessLevelButtonDisabled] = useState(true);
-
-  const [showFileInput, setShowFileInput] = useState(false);
-  const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
-  const [listSize, setListSize] = useState(4);
-  const [showDatePickerModal, setShowDatePickerModal] = useState(false);
-  const [showAccessLevelModal, setShowAccessLevelModal] = useState(false);
-
-  const today = new Date().toISOString().split("T")[0];
-
-  useEffect(() => {
-    // براساس انتخاب‌های "سمت"، چک‌باکس‌ها فعال/غیرفعال می‌شوند
-    updateCheckboxStates(formData.position);
-  }, [formData.position]);
-
-  const handleChange = (e) => {
-    const { name, value, type, selectedOptions, files } = e.target;
-    if (type === "select-multiple") {
-      const options = Array.from(selectedOptions).map((option) => option.value);
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: options,
-      }));
-      setIsAccessLevelButtonDisabled(false);
-
-      const specialOptions = [
-        "نماینده آب منطقه‌ای",
-        "نماینده آببران ذهاب جنوبی",
-        "نماینده آببران حومه قراویز",
-        "نماینده آببران بشیوه",
-        "نماینده آببران قلعه شاهین",
-        "نماینده آببران جگرلوی جنوبی",
-        "متقاضی مجوزدار",
-      ];
-      const hasSpecialOption = options.some((option) =>
-        specialOptions.includes(option)
-      );
-      setShowFileInput(hasSpecialOption);
-      setShowAdditionalInputs(hasSpecialOption);
-    } else if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
-
-  const updateCheckboxStates = (positions) => {
-    // براساس سمت‌های انتخاب‌شده، وضعیت چک‌باکس‌ها را تنظیم می‌کند
-    const states = {};
-
-    if (positions.includes("ادمین وبسایت")) {
-      // تمام چک‌باکس‌ها فعال
-      states.all = true;
-    } else if (positions.includes("مدیر بهره‌برداری")) {
-      // تمام چک‌باکس‌ها فعال بجز "امور جاری/کاربران"
-      states.all = true;
-      states.currentAffairsUsers = false;
-    } else if (positions.includes("مدیران مرتبط آب نیرو")) {
-      // تمام چک‌باکس‌ها فعال بجز "امور جاری" و فرزندانش
-      states.all = true;
-      states.currentAffairs = false;
-    } else if (positions.includes("مدیران مرتبط وزارت نیرو")) {
-      // تنظیم چک‌باکس‌های خاص
-      states.accounting = true;
-      states.maintenanceDashboard = true;
-      states.serviceDashboard = true;
-    } else {
-      // بازنشانی وضعیت‌ها
-      states.all = false;
-    }
-
-    setCheckboxStates(states);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isFormValid()) {
-      onSubmit(formData);
-    }
-  };
-
-  const toggleAccessLevelModal = () => {
-    setShowAccessLevelModal((prevState) => !prevState);
-  };
-
-  const toggleDatePickerModal = () => {
-    setShowDatePickerModal((prevState) => !prevState);
-  };
-
-  const handleDateSelect = (date) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      letterDate: date,
-    }));
-  };
-
-  const handleAccessLevelSubmit = (checkboxValues) => {
-    // نمایش مقادیر چک‌باکس‌ها در console
-    console.log(checkboxValues);
-    setShowAccessLevelModal(false);
-  };
-
-  return (
-    <div className={`modal ${show ? "d-block" : "d-none"}`} tabIndex="-1">
-      {/* محتوای فرم دعوتنامه */}
-      <div className={`modal-dialog ${showAdditionalInputs ? "modal-lg" : "modal-md"}`}>
-        {/* ... محتوای فرم ... */}
-      </div>
-      {showDatePickerModal && (
-        <DatePickerModal
-          show={showDatePickerModal}
-          onClose={toggleDatePickerModal}
-          onDateSelect={handleDateSelect}
-          selectedDate={formData.letterDate}
-        />
-      )}
-      {showAccessLevelModal && (
-        <AccessLevelModal
-          show={showAccessLevelModal}
-          onClose={toggleAccessLevelModal}
-          onAccessLevelSubmit={handleAccessLevelSubmit}
-          checkboxStates={checkboxStates} // ارسال وضعیت چک‌باکس‌ها به پنجره سطح دسترسی
-        />
-      )}
-    </div>
-  );
-};
-
-export default InvitationModal;
+this.state = {
+      activeComponent: null,
+      userData: null,
+      componentMap: {
+        usersdCurrent: () => <UsersdCurrent userData={this.state.userData} />,
+        contractCurrent: Header.finalAccessLevel.contractCurrent ? ContractCurrent : null,
+        requestCurrent: Header.finalAccessLevel.requestCurrent ? RequestCurrent : null,
+        deliveryCurrent: Header.finalAccessLevel.deliveryCurrent ? DeliveryCurrent : null,
+        reportCurrent: Header.finalAccessLevel.reportCurrent ? ReportCurrent : null,
+        serviceCurrent: Header.finalAccessLevel.serviceCurrent ? ServiceCurrent : null,
+        repairCurrent: Header.finalAccessLevel.repairCurrent ? RepairCurrent : null,
+        protectionCurrent: Header.finalAccessLevel.protectionCurrent ? ProtectionCurrent : null,
+        letterCurrent: Header.finalAccessLevel.letterCurrent ? LetterCurrent : null,
+        meetingCurrent: Header.finalAccessLevel.meetingCurrent ? MeetingCurrent : null,
+        visitCurrent: Header.finalAccessLevel.visitCurrent ? VisitCurrent : null,
+        warehouseCurrent: Header.finalAccessLevel.warehouseCurrent ? WarehouseCurrent : null,
+        circularCurrent: Header.finalAccessLevel.circularCurrent ? CircularCurrent : null,
+        standardCurrent: Header.finalAccessLevel.standardCurrent ? StandardCurrent : null,
+        usersdCurrent: UsersdCurrent,
+        accountingRecords: Header.finalAccessLevel.accountingRecords ? AccountingRecords : null,
+        repairsService: Header.finalAccessLevel.repairCurrent ? RepairsService : null,
+        serviceRecords: Header.finalAccessLevel.serviceRecords ? ServiceRecords : null,
+        warehouseRecords: Header.finalAccessLevel.warehouseRecords ? WarehouseRecords : null,
+        protectionRecords: Header.finalAccessLevel.protectionRecords ? ProtectionRecords : null,
+        legalRecords: Header.finalAccessLevel.legalRecords ? LegalRecords : null,
+        letterRecords: Header.finalAccessLevel.legalRecords ? LetterRecords : null,
+        reportsRecords: Header.finalAccessLevel.reportsRecords ? ReportsRecords : null,
+        visitesRecords: Header.finalAccessLevel.visitesRecords ? VisitesRecords : null,
+        damConstruction: Header.finalAccessLevel.damConstruction ? DamConstruction : null,
+        channelConstruction: Header.finalAccessLevel.channelConstruction ? ChannelConstruction : null,
+        pumpingConstruction: Header.finalAccessLevel.pumpingConstruction ? PumpingConstruction : null,
+        networkConstruction: Header.finalAccessLevel.networkConstruction ? NetworkConstruction : null,
+        firstStudies: Header.finalAccessLevel.firstStudies ? FirstStudies : null,
+        secondStudies: Header.finalAccessLevel.secondStudies ? SecondStudies : null,
+      }
+    };
+  }

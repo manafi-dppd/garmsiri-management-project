@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccessLevelSection from "./AccessLevelModal/AccessLevelSection";
 import useAccessLevelEffect from "./useAccessLevelEffect";
+import InvitationModal from "./invitationModal";
 import Header from "../../../header";
 
 const AccessLevelModal = ({
@@ -203,10 +204,11 @@ const AccessLevelModal = ({
     onAccessLevelSubmit(checkedState);
 
     // Update Header's finalAccessLevel
-    Header.setFinalAccessLevel(checkedState);
+    // Header.setFinalAccessLevel(checkedState);
+    setCheckedState(checkedState);
 
     // Log the finalAccessLevel
-    console.log("Updated Final Access Level in Header:", checkedState);
+    // console.log("Updated Final Access Level in Header:", checkedState);
     onClose();
   };
 
