@@ -12,6 +12,8 @@ const UsersdCurrent = ({ userData, row, index }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [accessLevelsData, setAccessLevelsData] = useState({}); // State to hold access levels
   const [currentPosition, setCurrentPosition] = useState(""); // ذخیره سمت فعلی
+  const [startDate, setStartDate] = useState(new Date()); // تاریخ اولیه
+  const [showCalendars, setShowCalendars] = useState([]); // کنترل نمایش تقویم برای هر سطر
 
   const handleOpenModal = (position) => {
     setCurrentPosition(position);
@@ -23,7 +25,6 @@ const UsersdCurrent = ({ userData, row, index }) => {
   };
 
   const handleFormSubmit = (formData) => {
-    // Extract lastName and position (first selected position)
     const { firstName, lastName, phoneNumber, endDate, gender, position } =
       formData;
     const selectedPosition = position[0] || "";
@@ -34,33 +35,20 @@ const UsersdCurrent = ({ userData, row, index }) => {
       { firstName, lastName, phoneNumber, endDate, gender, selectedPosition },
     ]);
 
-    // Close the InvitationModal
     setShowInvitationModal(false);
-    console.log("Form Data:", formData);
-
     setIsModalOpen(false);
   };
 
   const handleAccessLevelsUpdate = (updatedAccessLevels) => {
-    const { position, checkedState } = updatedAccessLevels; // Ensure we're using checkedState from AccessLevelModal
-
-    // Store the access levels for the given position
+    const { position, checkedState } = updatedAccessLevels;
     setAccessLevelsData((prevState) => ({
       ...prevState,
       [position]: checkedState,
     }));
-    console.log("Form Data:", updatedAccessLevels);
-
-    console.log(
-      `Access levels updated for position ${position}:`,
-      checkedState
-    );
   };
 
   const handlePositionButtonClick = (position) => {
-    // Fetch the access levels for the clicked position
     const accessLevelsForPosition = accessLevelsData[position];
-
     if (accessLevelsForPosition) {
       console.log(
         "Checkbox States for Position:",
@@ -84,21 +72,27 @@ const UsersdCurrent = ({ userData, row, index }) => {
       ),
     },
   ];
-  const [startDate, setStartDate] = useState(new Date()); // تاریخ اولیه
-  const [showCalendar, setShowCalendar] = useState(false); // کنترل نمایش تقویم
 
-  const handleButtonClick = () => {
-    setShowCalendar(!showCalendar); // با کلیک، وضعیت تقویم را تغییر می‌دهیم (باز یا بسته)
+  const handleButtonClick = (index) => {
+    setShowCalendars((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = !updatedState[index]; // فقط وضعیت همان سطر را تغییر می‌دهد
+      return updatedState;
+    });
   };
 
   const handleDateChange = (date, index) => {
     setStartDate(date);
     setTableRows((prevRows) => {
       const updatedRows = [...prevRows];
-      updatedRows[index].endDate = date.toLocaleDateString("fa-IR"); // فرمت شمسی
+      updatedRows[index].endDate = date;
       return updatedRows;
     });
-    setShowCalendar(false); // بستن تقویم پس از انتخاب تاریخ
+    setShowCalendars((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = false; // بستن تقویم پس از انتخاب تاریخ
+      return updatedState;
+    });
   };
 
   return (
@@ -108,10 +102,9 @@ const UsersdCurrent = ({ userData, row, index }) => {
         show={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleFormSubmit}
-        onAccessLevelsUpdate={handleAccessLevelsUpdate} // Pass the function
+        onAccessLevelsUpdate={handleAccessLevelsUpdate}
       />
 
-      {/* Render the table below the "Send Invitation" button */}
       <table className="table mt-4">
         <thead>
           <tr>
@@ -121,6 +114,7 @@ const UsersdCurrent = ({ userData, row, index }) => {
             <th>تاریخ پایان عضویت</th>
             <th>جنسیت</th>
             <th>سمت</th>
+            <th>مجوز</th>
           </tr>
         </thead>
         <tbody>
@@ -132,20 +126,33 @@ const UsersdCurrent = ({ userData, row, index }) => {
               <td>
                 <button
                   className="btn btn-secondary"
-                  onClick={handleButtonClick} // index را به عنوان مقدار برای کنترل نمایش تقویم پاس می‌دهیم
+                  onClick={() => handleButtonClick(index)} // index را پاس می‌دهیم
                 >
-                  {row.endDate}
+                  {new Date(row.endDate).toLocaleDateString("fa-IR")}
                 </button>
-                {showCalendar && (
+                {showCalendars[index] && (
                   <DatePicker
                     selected={startDate}
-                    onChange={(date) => handleDateChange(date, index)} // بروز‌رسانی تاریخ برای سطر مشخص‌شده
-                    inline // این گزینه باعث می‌شود تقویم در همان مکان نمایش داده شود
+                    onChange={(date) => handleDateChange(date, index)}
+                    inline
                   />
                 )}
               </td>
               <td>{row.gender}</td>
               <td>{row.selectedPosition}</td>
+              <td>
+                {row.selectedPosition === "نماینده آب منطقه‌ای" ||
+                row.selectedPosition === "نماینده آببران ذهاب جنوبی" ||
+                row.selectedPosition === "نماینده آببران حومه قراویز" ||
+                row.selectedPosition === "نماینده آببران بشیوه" ||
+                row.selectedPosition === "نماینده آببران قلعه شاهین" ||
+                row.selectedPosition === "نماینده آببران جگرلوی جنوبی" ||
+                row.selectedPosition === "متقاضی مجوزدار" ? (
+                  <button className="btn btn-info">مشاهده</button>
+                ) : (
+                  "نیاز ندارد"
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

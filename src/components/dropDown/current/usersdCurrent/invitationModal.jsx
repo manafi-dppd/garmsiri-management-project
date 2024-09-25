@@ -6,6 +6,7 @@ import DatePickerModal from "./DatePickerModal"; // Import the DatePickerModal c
 import useAccessLevelEffect from "./useAccessLevelEffect";
 import Header from "../../../header";
 import { getAccessLevelsForPosition } from "./useAccessLevelEffect"; // مسیر درست فایل را جایگزین کنید
+import moment from "moment-jalaali"; // برای مدیریت تاریخ شمسی
 
 const InvitationModal = ({
   show,
@@ -91,27 +92,49 @@ const InvitationModal = ({
       setSelectedOption(e); // ذخیره گزینه انتخابی
       const newAccessLevels = getAccessLevelsForPosition(options[0]);
       setCheckedState(newAccessLevels);
-      
+
       setNewAccessLevels(newAccessLevels); // ذخیره access levels در state
       console.log("Access Levels in handleChange:", newAccessLevels);
     } else if (type === "file") {
       setFormData((prevData) => ({
         ...prevData,
         [name]: files[0],
-      }));
+      }));    
     } else {
+      // تنظیم مقدار value به صورت مستقیم برای سایر ورودی‌ها
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     }
   };
-   // Inside InvitationModal component
-   const handleAccessLevelSubmit = (checkedState) => {
+
+  // Inside InvitationModal component
+  const handleAccessLevelSubmit = (checkedState) => {
     setCheckedState(checkedState); // Update the access level state
     console.log("Updated Access Levels:", checkedState);
     // You can trigger additional logic here based on the updated access levels
   };
+  useEffect(() => {
+    if (show) {
+      setFormData({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        endDate: "",
+        position: [],
+        gender: "",
+        file: null,
+        issuer: "",
+        letterNumber: "",
+        letterDate: "",
+        confirmer: "",
+      });
+      setCheckedState({});
+      setDisabledState({});
+      setNewAccessLevels(null);
+    }
+  }, [show]);
   useEffect(() => {
     if (checkedState && Object.keys(checkedState).length > 0) {
       console.log(
@@ -162,7 +185,6 @@ const InvitationModal = ({
     return basicValid;
   };
 
-
   const handleSubmit = (e) => {
     // Optionally close the modal or perform other actions
     e.preventDefault();
@@ -195,7 +217,14 @@ const InvitationModal = ({
     }));
   };
 
- 
+  const toPersianDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+  
 
   // const updateAccessLevels = (levels) => {
   //   console.log("Checkbox States:", levels);
@@ -268,14 +297,14 @@ const InvitationModal = ({
 
                     <div className="mb-3">
                       <label htmlFor="endDate" className="form-label">
-                        تاریخ پایان عضویت
+                        تاریخ پایان عضویت: {toPersianDate(formData.endDate) || ""}
                       </label>
                       <input
                         type="date"
                         className="form-control text-end"
                         id="endDate"
                         name="endDate"
-                        value={formData.endDate}
+                        value={formData.endDate || ""} // نمایش مقدار endDate از formData
                         onChange={handleChange}
                         min={today}
                       />
