@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import TabComponent from "../../tabComponent";
 import InvitationModal from "./usersdCurrent/invitationModal";
-import AccessLevelModal from "./usersdCurrent/AccessLevelModal"; // وارد کردن کامپوننت AccessLevelModal
+import AccessLevelModal from "./usersdCurrent/AccessLevelModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const UsersdCurrent = ({ userData, row, index }) => {
+  const [checkedStates, setCheckedStates] = useState([]); // State برای ذخیره checked states
   const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [tableRows, setTableRows] = useState([]); // State to manage table rows
-
+  const [tableRows, setTableRows] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [accessLevelsData, setAccessLevelsData] = useState({}); // State to hold access levels
-  const [currentPosition, setCurrentPosition] = useState(""); // ذخیره سمت فعلی
-  const [startDate, setStartDate] = useState(new Date()); // تاریخ اولیه
-  const [showCalendars, setShowCalendars] = useState([]); // کنترل نمایش تقویم برای هر سطر
+  const [accessLevelsData, setAccessLevelsData] = useState({});
+  const [currentPosition, setCurrentPosition] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [showCalendars, setShowCalendars] = useState([]);
+  const [showAccessLevelModal, setShowAccessLevelModal] = useState(false);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const [checkedState, setCheckedState] = useState({});
+
+  const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null); // ایندکس سطر مورد نظر برای حذف
+  const [selectedUser, setSelectedUser] = useState(null); // ذخیره اطلاعات کاربر انتخاب شده
+
+  const handleDeleteClick = (row) => {
+    setSelectedUser(row); // ذخیره سطر انتخاب شده
+    setRowToDelete(row.index); // ذخیره ایندکس سطر انتخاب شده
+    setShowDeleteWarning(true); // نمایش هشدار حذف
+  };
 
   const handleOpenModal = (position) => {
     setCurrentPosition(position);
@@ -27,12 +40,11 @@ const UsersdCurrent = ({ userData, row, index }) => {
   const handleFormSubmit = (formData) => {
     const { firstName, lastName, phoneNumber, endDate, gender, position } =
       formData;
-    const selectedPosition = position[0] || "";
+      const selectedPositions = position.join(" / ");
 
-    // Add new row to the table
     setTableRows((prevRows) => [
       ...prevRows,
-      { firstName, lastName, phoneNumber, endDate, gender, selectedPosition },
+      { firstName, lastName, phoneNumber, endDate, gender, selectedPositions },
     ]);
 
     setShowInvitationModal(false);
@@ -47,17 +59,35 @@ const UsersdCurrent = ({ userData, row, index }) => {
     }));
   };
 
-  const handlePositionButtonClick = (position) => {
-    const accessLevelsForPosition = accessLevelsData[position];
-    if (accessLevelsForPosition) {
-      console.log(
-        "Checkbox States for Position:",
-        position,
-        accessLevelsForPosition
-      );
-    } else {
-      console.log(`No access levels found for position: ${position}`);
-    }
+  const handleAccessLevelButtonClick = (index) => {
+    setSelectedRowIndex(index);
+    setCheckedState(accessLevelsData[tableRows[index].selectedPosition] || {});
+    setShowAccessLevelModal(true);
+  };
+
+  const handleAccessLevelSubmit = (checkedState) => {
+    setTableRows((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[selectedRowIndex].accessLevel = checkedState;
+      return updatedRows;
+    });
+    setShowAccessLevelModal(false);
+  };
+
+  const handleDeleteButtonClick = (index) => {
+    setRowToDelete(index);
+    setShowDeleteWarning(true);
+  };
+
+  const confirmDelete = () => {
+    setTableRows(
+      (prevRows) => prevRows.filter((_, index) => index !== rowToDelete) // استفاده از rowToDelete
+    );
+    setShowDeleteWarning(false); // بستن هشدار
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteWarning(false);
   };
 
   const tabs = [
@@ -76,7 +106,7 @@ const UsersdCurrent = ({ userData, row, index }) => {
   const handleButtonClick = (index) => {
     setShowCalendars((prevState) => {
       const updatedState = [...prevState];
-      updatedState[index] = !updatedState[index]; // فقط وضعیت همان سطر را تغییر می‌دهد
+      updatedState[index] = !updatedState[index];
       return updatedState;
     });
   };
@@ -90,8 +120,16 @@ const UsersdCurrent = ({ userData, row, index }) => {
     });
     setShowCalendars((prevState) => {
       const updatedState = [...prevState];
-      updatedState[index] = false; // بستن تقویم پس از انتخاب تاریخ
+      updatedState[index] = false;
       return updatedState;
+    });
+  };
+  const today = new Date(); // تاریخ امروز
+  const handleCheckedStateUpdate = (checkedState) => {
+    setCheckedStates((prev) => {
+      const newStates = [...prev];
+      newStates[selectedRowIndex] = checkedState; // به روز رسانی وضعیت برای ردیف انتخابی
+      return newStates;
     });
   };
 
@@ -103,7 +141,30 @@ const UsersdCurrent = ({ userData, row, index }) => {
         onClose={handleCloseModal}
         onSubmit={handleFormSubmit}
         onAccessLevelsUpdate={handleAccessLevelsUpdate}
+        onCheckedStateUpdate={handleCheckedStateUpdate} // ارسال تابع به کامپوننت
       />
+
+      <AccessLevelModal
+        show={showAccessLevelModal}
+        onClose={() => setShowAccessLevelModal(false)}
+        onAccessLevelSubmit={handleAccessLevelSubmit}
+        checkedState={checkedState[selectedRowIndex]}
+      />
+
+      {showDeleteWarning && selectedUser && (
+        <div className="alert alert-warning">
+          <p>
+            آیا از حذف {selectedUser.gender === "مرد" ? "آقای" : selectedUser.gender === "زن" ? "خانم" : "خانم/آقای"}{" "}
+            {selectedUser.firstName} {selectedUser.lastName} مطمئن هستید؟
+          </p>
+          <button className="btn btn-danger" onClick={confirmDelete}>
+            بله
+          </button>
+          <button className="btn btn-secondary" onClick={cancelDelete}>
+            خیر
+          </button>
+        </div>
+      )}
 
       <table className="table mt-4">
         <thead>
@@ -115,6 +176,9 @@ const UsersdCurrent = ({ userData, row, index }) => {
             <th>جنسیت</th>
             <th>سمت</th>
             <th>مجوز</th>
+            <th>سطح دسترسی</th>
+            <th>حذف</th> {/* اضافه کردن ستون حذف */}
+            <th>مرحله ثبت‌نام</th>
           </tr>
         </thead>
         <tbody>
@@ -126,7 +190,7 @@ const UsersdCurrent = ({ userData, row, index }) => {
               <td>
                 <button
                   className="btn btn-secondary"
-                  onClick={() => handleButtonClick(index)} // index را پاس می‌دهیم
+                  onClick={() => handleButtonClick(index)}
                 >
                   {new Date(row.endDate).toLocaleDateString("fa-IR")}
                 </button>
@@ -135,11 +199,12 @@ const UsersdCurrent = ({ userData, row, index }) => {
                     selected={startDate}
                     onChange={(date) => handleDateChange(date, index)}
                     inline
+                    minDate={today} // فقط تاریخ امروز و بعد از آن قابل انتخاب هستند
                   />
                 )}
               </td>
               <td>{row.gender}</td>
-              <td>{row.selectedPosition}</td>
+              <td>{row.selectedPositions}</td>
               <td>
                 {row.selectedPosition === "نماینده آب منطقه‌ای" ||
                 row.selectedPosition === "نماینده آببران ذهاب جنوبی" ||
@@ -153,6 +218,23 @@ const UsersdCurrent = ({ userData, row, index }) => {
                   "نیاز ندارد"
                 )}
               </td>
+              <td>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleAccessLevelButtonClick(index)}
+                >
+                  سطح دسترسی
+                </button>
+              </td>
+              <td>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteClick({ ...row, index })} // ارسال اطلاعات سطر و ایندکس
+                >
+                  حذف
+                </button>
+              </td>
+              <td>ارسال دعوتنامه</td>
             </tr>
           ))}
         </tbody>
