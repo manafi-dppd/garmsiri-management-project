@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import Modal from "react-modal";
 
-const RequestFromPumping = () => {
+const RequestFromPump = () => {
   const [sheets, setSheets] = useState([]); // ذخیره شیت‌ها
   const [currentSheetIndex, setCurrentSheetIndex] = useState(0); // برای نمایش شیت فعلی
   const [modalIsOpen, setModalIsOpen] = useState(false); // کنترل مودال
@@ -65,27 +65,43 @@ const RequestFromPumping = () => {
 
     const { data, hiddenColumns } = sheets[currentSheetIndex];
 
-    // ستون‌هایی که باید حذف شوند
-    const columnsToRemove = [8, 14, 20, 26, 32];
+    // بدست آوردن تعداد ستون‌ها از اولین ردیف
+    const numberOfColumns = data[6].length; // طول اولین ردیف نشان‌دهنده تعداد ستون‌ها است
+    console.log("تعداد ستون‌ها:", numberOfColumns); // نمایش تعداد ستون‌ها در کنسول
 
     // تابع برای تعیین اینکه آیا ستون باید حذف شود
     const shouldRemoveColumn = (index) => {
-      const columnsToRemove = [7]; // ستون سوم با شاخص 2
-      return columnsToRemove.includes(index);
+      const columnsToRemove = [];
+      // آرایه‌ای از ایندکس‌های ستون‌هایی که باید حذف شوند
+      for (let i = 7; i <= numberOfColumns - 4; i += 6) {
+        columnsToRemove.push(i);
+      }
+      return columnsToRemove.includes(index) || index >= numberOfColumns - 4; // اگر ستون در آرایه باشد، حذف می‌شود
     };
 
     // ستون‌هایی که باید با فرمت ساعت نمایش داده شوند
-    const timeColumns = [4, 5, 10, 11, 16, 17, 22, 23, 28, 29];
+    const timeColumns = []; // آرایه خالی برای مقداردهی
+
+    // استفاده از حلقه for برای مقداردهی
+    for (let i = 4; i <= numberOfColumns - 6; i += 6) {
+      timeColumns.push(i); // افزودن اولین مقدار جفت
+      timeColumns.push(i + 1); // افزودن دومین مقدار جفت
+    }
 
     // ستون‌هایی که باید با یک رقم اعشار نمایش داده شوند
-    const decimalColumns = [3, 6, 9, 12, 15, 18, 21, 24, 28, 30];
+    const decimalColumns = []; // آرایه خالی برای مقداردهی
+
+    // استفاده از حلقه for برای مقداردهی
+    for (let i = 3; i <= numberOfColumns - 4; i += 3) {
+      decimalColumns.push(i); // هر مقدار را 3 واحد بیشتر می‌کنیم و به آرایه اضافه می‌کنیم
+    }
 
     // تابع برای فرمت کردن به فرمت ساعت (hh:mm)
     const formatTime = (value) => {
-      const time = parseFloat(value);
+      const time = parseFloat(value) * 24;
       if (isNaN(time)) return value; // اگر مقدار عددی نبود، همان مقدار اصلی را برگرداند
 
-      const hours = Math.floor(time);
+      const hours = Math.floor(time) + 1;
       const minutes = Math.round((time - hours) * 60);
       return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
         2,
@@ -102,37 +118,95 @@ const RequestFromPumping = () => {
     const shouldFormatAsDecimal = (index) => {
       return decimalColumns.includes(index);
     };
+    // آرایه‌ای برای ذخیره ایندکس ستون‌های خالی
+    let emptyColumns = [];
+
+    // بررسی تمام ستون‌ها در ردیف 3 (ایندکس 2) و پیدا کردن ستون‌های خالی
+    for (let index = 0; index < numberOfColumns; index++) {
+      const cell = data[2][index];
+      if (cell === undefined || cell === "") {
+        console.log(`ستون ${index} در ردیف 3 خالی است`);
+        emptyColumns.push(index); // اضافه کردن ایندکس ستون خالی به آرایه
+      }
+    }
 
     return (
       <table border="1">
         <thead>
           <tr>
-            {data[0].map((col, index) =>
-              hiddenColumns.includes(index) ||
-              shouldRemoveColumn(index) ? null : (
-                <th key={index}>{col}</th>
-              )
-            )}
+            {Array.from({ length: numberOfColumns }).map((_, index) => {
+              // بررسی اینکه آیا ستون باید مخفی شود یا حذف شود
+              if (hiddenColumns.includes(index) || shouldRemoveColumn(index)) {
+                return null;
+              }
+
+              // بررسی اینکه آیا ستون خالی است یا نه
+              const isEmptyColumn = emptyColumns.includes(index);
+              const cellStyle = {
+                borderBottom: "1px solid black", // مرز زیر هر سلول
+                borderRight: !isEmptyColumn ? "1px solid black" : "none", // مرز راست برای سلول‌هایی که مقدار دارند
+                // textAlign: "center", // وسط‌چین کردن متن
+                // verticalAlign: "middle", // وسط‌چین کردن عمودی
+              };
+
+              // اگر ستون خالی باشد، یک سلول خالی را برگردانید
+              if (isEmptyColumn) {
+                return <th key={index} style={cellStyle}></th>; // نمایش سلول خالی با مرز زیرین
+              }
+
+              // در غیر این صورت، فقط مقدار سلول فعلی را نمایش دهید
+              return (
+                <th key={index} style={cellStyle}>
+                  {data[2][index]}
+                </th>
+              );
+            })}
           </tr>
         </thead>
+
         <tbody>
-          {data.slice(1).map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) =>
-                // hiddenColumns.includes(cellIndex) ||
-                // shouldRemoveColumn(cellIndex) ? null : (
-                  <td key={cellIndex}>
-                    {shouldFormatAsTime(cellIndex)
-                      ? formatTime(cell) // نمایش به فرمت ساعت (hh:mm)
-                      : shouldFormatAsDecimal(cellIndex)
-                      ? parseFloat(cell).toFixed(1) // نمایش با یک رقم اعشار
-                      : cell}
-                  </td>
-                
-              )}
-            </tr>
-          ))}
-        </tbody>
+  {data.slice(3, 20).map((row, rowIndex) => (
+    <tr key={rowIndex}>
+      {Array.from({ length: numberOfColumns }).map((_, cellIndex) => {
+        if (hiddenColumns.includes(cellIndex) || shouldRemoveColumn(cellIndex)) {
+          return null; // اگر ستون مخفی یا حذف شده باشد، چیزی برنگردانید
+        }
+
+        // استایل‌های مرز برای سلول
+        const cellStyle = {
+          borderBottom: "1px solid black", // مرز زیر هر سلول
+          borderRight: row[cellIndex] ? "1px solid black" : "none", // مرز راست برای سلول‌هایی که مقدار دارند
+          textAlign: "center", // وسط‌چین کردن متن
+          verticalAlign: "middle", // وسط‌چین کردن عمودی
+        };
+
+        return (
+          <td key={cellIndex} style={cellStyle}>
+            {row[cellIndex] === undefined || row[cellIndex] === ""
+              ? "" // سلول خالی نمایش داده شود
+              : shouldFormatAsTime(cellIndex)
+              ? formatTime(row[cellIndex]) // نمایش به فرمت ساعت (hh:mm)
+              : (rowIndex === 0 ||
+                  rowIndex === 14 ||
+                  rowIndex === 15 ||
+                  rowIndex === 16) &&
+                cellIndex !== 0 // بررسی ایندکس‌های خاص برای ردیف‌های 16، 17 و 18
+              ? parseFloat(row[cellIndex])
+                  .toFixed(1)
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // نمایش با یک رقم اعشار و جداکننده
+              : shouldFormatAsDecimal(cellIndex) &&
+                rowIndex !== 1 &&
+                rowIndex !== 2
+              ? parseFloat(row[cellIndex]).toFixed(1) // نمایش با یک رقم اعشار
+              : row[cellIndex] // مقدار اصلی سلول
+            }
+          </td>
+        );
+      })}
+    </tr>
+  ))}
+</tbody>
+
       </table>
     );
   };
@@ -171,4 +245,4 @@ const RequestFromPumping = () => {
   );
 };
 
-export default RequestFromPumping;
+export default RequestFromPump;
