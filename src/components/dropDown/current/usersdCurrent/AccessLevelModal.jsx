@@ -174,7 +174,12 @@ const AccessLevelModal = ({
       updateAccessLevels(checkedState);
     }
   }, [checkedState, updateAccessLevels]);
-
+  // useEffect(() => {
+  //   if (checkedState) {
+  //     // Set the initial checked state for the checkboxes
+  //     setCheckedState(checkedState);
+  //   }
+  // }, [checkedState]);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   // تابع برای به‌روزرسانی وضعیت چک‌باکس‌ها

@@ -82,3 +82,11 @@
   direction: rtl;
   text-align: right;
 }
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background-color: white; /* برای اطمینان از اینکه هنگام اسکرول هدر مشخص بماند */
+  z-index: 1; /* بالاتر از سایر المان‌ها */
+}
+
