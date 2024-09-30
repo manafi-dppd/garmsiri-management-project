@@ -1,6 +1,6 @@
 import React from "react";
 import TabComponent from "../../tabComponent";
-import RequestFromPump from "./RequestFromPump/RequestFromPump"; // ایمپورت کامپوننت اکسل
+import ExcelUploader from "./RequestFromPump/ExcelUploader"; // ایمپورت کامپوننت اکسل
 
 const RequestCurrent = () => {
   const tabs = [
@@ -8,7 +8,7 @@ const RequestCurrent = () => {
     { label: "تقویم آبیاری", content: "تقویم آبیاری" },
     { label: "درخواست از سد", content: "درخواست از سد" },
     { label: "درخواست از سامانه", content: "درخواست از سامانه" },
-    { label: "درخواست از ایستگاه پمپاژ", content: <RequestFromPump /> }, // اضافه کردن کامپوننت اکسل
+    { label: "درخواست از ایستگاه پمپاژ", content: <ExcelUploader /> }, // اضافه کردن کامپوننت اکسل
   ];
 
   return (
