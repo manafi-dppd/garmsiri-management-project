@@ -1,6 +1,8 @@
 import React from "react";
+import React from "react";
 import TabComponent from "../../tabComponent";
 import ExcelUploader from "./RequestFromPump/ExcelUploader"; // ایمپورت کامپوننت اکسل
+import RequestFromPump from "./RequestFromPump/RequestFromPump"; // ایمپورت کامپوننت اکسل
 
 const RequestCurrent = () => {
   const tabs = [
@@ -14,6 +16,8 @@ const RequestCurrent = () => {
   return (
     <TabComponent
       tabs={tabs}
+      activeTabIndex={4} // تنظیم تب فعال به "درخواست از ایستگاه پمپاژ"
+      disabledTabIndex={0} // غیرفعال کردن اولین تب
       activeTabIndex={4} // تنظیم تب فعال به "درخواست از ایستگاه پمپاژ"
       disabledTabIndex={0} // غیرفعال کردن اولین تب
     />
