@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import ShowExcelSheets from "./ShowExcelSheets"; // فرض بر این است که این کامپوننت در فایل دیگری است
 import "bootstrap/dist/css/bootstrap.min.css";
+import ProgramList from "./ProgramList";
 
-const ExcelUploader = () => {
+const RequestFromPump = () => {
   const [selectedOption, setSelectedOption] = useState("upload"); // وضعیت دکمه رادیویی
-
+  const [cropSeason, setCropSeason] = useState("پاییزه"); // وضعیت دوره کشت
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value); // تغییر گزینه انتخاب شده
   };
@@ -88,64 +89,76 @@ const ExcelUploader = () => {
               style={{ width: "65%" }}
               id="period"
               name="period"
+              value={cropSeason}
+              onChange={(e) => setCropSeason(e.target.value)}
             >
-              <option>پاییزه</option>
-              <option>تابستانه</option>
+              <option value="پاییزه">پاییزه</option>
+              <option value="تابستانه">تابستانه</option>
             </select>
           </div>
         </div>
       </div>
-      <div className="d-flex flex-row mb-1">
-        <h5>نحوه ارسال برنامه:</h5>
-        <div className="mb-2 mx-2">
-          <label>
-            <input
-              type="radio"
-              className="form-check-input"
-              value="upload"
-              checked={selectedOption === "upload"}
-              onChange={handleOptionChange}
-            />
-            فایل اکسل
-          </label>
-          <label className="mx-2">
-            <input
-              type="radio"
-              className="form-check-input mx-1"
-              value="form"
-              checked={selectedOption === "form"}
-              onChange={handleOptionChange}
-            />
-            تکمیل فرم
-          </label>
+      <div className= "py-3" style={{ boxShadow: "-5px 7px 25px #48d45f", backgroundColor: "#a7e7bc" }}>
+        <div className="d-flex flex-row mb-1">
+          <h5>نحوه ارسال برنامه:</h5>
+          <div className="mb-2 mx-2">
+            <label>
+              <input
+                type="radio"
+                className="form-check-input"
+                value="upload"
+                checked={selectedOption === "upload"}
+                onChange={handleOptionChange}
+              />
+              فایل اکسل
+            </label>
+            <label className="mx-2">
+              <input
+                type="radio"
+                className="form-check-input mx-1"
+                value="form"
+                checked={selectedOption === "form"}
+                onChange={handleOptionChange}
+              />
+              تکمیل فرم
+            </label>
+          </div>
         </div>
+
+        {selectedOption === "upload" && (
+          <>
+            <input
+              className="form-control"
+              type="file"
+              accept=".xlsx, .xls"
+              id="formFile"
+              onChange={handleFileUpload}
+            />
+            {/* نمایش ShowExcelSheets در صورتی که فایل داده داشته باشد */}
+            {fileData && (
+              <div style={{ position: "relative", zIndex: 2 }}>
+                <ShowExcelSheets fileData={fileData} />
+              </div>
+            )}
+          </>
+        )}
+
+        {selectedOption === "form" && (
+          <div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => alert("تکمیل فرم")}
+            >
+              تکمیل فرم
+            </button>
+          </div>
+        )}
       </div>
-      {selectedOption === "upload" && (
-        <>
-          <input
-            className="form-control"
-            type="file"
-            accept=".xlsx, .xls"
-            id="formFile"
-            onChange={handleFileUpload}
-          />
-          {/* نمایش ShowExcelSheets در صورتی که فایل داده داشته باشد */}
-          {fileData && <ShowExcelSheets fileData={fileData} />}
-        </>
-      )}
-      {selectedOption === "form" && (
-        <div>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => alert("تکمیل فرم")}
-          >
-            تکمیل فرم
-          </button>
-        </div>
-      )}
+      <ProgramList cropSeason={cropSeason} />{" "}
+      {/* ارسال دوره کشت به کامپوننت ExcelTable */}
     </div>
   );
 };
 
-export default ExcelUploader;
+export default RequestFromPump;

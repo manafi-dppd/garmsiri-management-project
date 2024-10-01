@@ -175,27 +175,6 @@ const ShowExcelSheets = ({ fileData }) => {
           {data.slice(3, 20).map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Array.from({ length: numberOfColumns }).map((_, cellIndex) => {
-                // ادغام ستون 1 و 2 برای سطرهای 1، 15، 16، 17
-                // if (
-                //   (rowIndex === 0 || rowIndex === 14 || rowIndex === 15 || rowIndex === 16) &&
-                //   cellIndex === 0
-                // ) {
-                //   return (
-                //     <td
-                //       key={cellIndex}
-                //       colSpan={2}
-                //       style={{
-                //         borderBottom: "1px solid black",
-                //         borderRight: "1px solid black", // رسم مرز راست بعد از ادغام
-                //         textAlign: "center",
-                //         verticalAlign: "middle",
-                //       }}
-                //     >
-                //       {row[cellIndex]}
-                //     </td>
-                //   );
-                // }
-
                 if (
                   // hiddenColumns.includes(cellIndex) ||
                   shouldRemoveColumn(cellIndex)
@@ -241,67 +220,6 @@ const ShowExcelSheets = ({ fileData }) => {
                     }
                   </td>
                 );
-                // ادغام ستون‌های 3 با 4 ستون بعدی (3 تا 7) برای سطرهای 1، 15، 16، 17
-
-                // if (
-                //   (rowIndex === 0 || rowIndex === 14 || rowIndex === 15 || rowIndex === 16) &&
-                //   cellIndex === 0
-                // ) {
-                //   return (
-                //     <td
-                //       key={cellIndex}
-                //       colSpan={2}
-                //       style={{
-                //         borderBottom: "1px solid black",
-                //         borderRight: "1px solid black", // رسم مرز راست بعد از ادغام
-                //         textAlign: "center",
-                //         verticalAlign: "middle",
-                //       }}
-                //     >
-                //       {row[cellIndex]}
-                //     </td>
-                //   );
-                // }
-
-                // ادغام ستون‌های 3 با 4 ستون بعدی (3 تا 7) برای سطرهای 1، 15، 16، 17
-                // if (
-                //   (rowIndex === 0 || rowIndex === 14 || rowIndex === 15 || rowIndex === 16) &&
-                //   [2, 8, 14, 20, 26].includes(cellIndex)
-                // ) {
-                //   return (
-                //     <td
-                //       key={cellIndex}
-                //       colSpan={5}
-                //       style={{
-                //         borderBottom: "1px solid black",
-                //         borderRight: "1px solid black", // رسم مرز راست بعد از ادغام
-                //         textAlign: "center",
-                //         verticalAlign: "middle",
-                //       }}
-                //     >
-                //       {row[cellIndex]}
-                //     </td>
-                //   );
-                // }
-
-                // // حذف ستون‌های بعد از ادغام
-                // if (
-                //   (rowIndex === 0 || rowIndex === 14 || rowIndex === 15 || rowIndex === 16) &&
-                //   ((cellIndex > 2 && cellIndex < 7) || // حذف ستون‌های 4 تا 7 بعد از ستون 3
-                //     (cellIndex > 8 && cellIndex < 13) || // حذف ستون‌های 10 تا 14 بعد از ستون 9
-                //     (cellIndex > 14 && cellIndex < 19) || // حذف ستون‌های 16 تا 20 بعد از ستون 15
-                //     (cellIndex > 20 && cellIndex < 25) || // حذف ستون‌های 22 تا 26 بعد از ستون 21
-                //     (cellIndex > 26 && cellIndex < 31)) // حذف ستون‌های 28 تا 32 بعد از ستون 27
-                // ) {
-                //   return null;
-                // }
-
-                // // سلول‌های دیگر بدون ادغام
-                // return (
-                //   <td key={cellIndex} style={cellStyle}>
-                //     {row[cellIndex]}
-                //   </td>
-                // );
               })}
             </tr>
           ))}
@@ -318,7 +236,24 @@ const ShowExcelSheets = ({ fileData }) => {
 
   return (
     <div>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          content: {
+            zIndex: 1000, // Ensure this is higher than other elements on the page
+            position: "absolute", // To control positioning
+            top: "2%", // Adjust the positioning as per your need
+            left: "2%",
+            right: "2%",
+            bottom: "2%",
+          },
+          overlay: {
+            zIndex: 999, // Overlay should also have a high z-index
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
+          },
+        }}
+      >
         <Tabs
           selectedIndex={selectedTabIndex}
           onSelect={(index) => setSelectedTabIndex(index)}
